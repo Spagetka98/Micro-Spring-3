@@ -1,0 +1,27 @@
+server:
+  port: 9000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8761/eureka"
+
+gateway-prop:
+  jwtPreposition: Bearer
+  excludedUrls: exc
+  validationURI: lb://AUTHENTICATION-SERVICE/secured/validation
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: authentication-service
+          uri: lb://authentication-service
+          predicates:
+            - Path=/public/auth/**,/secured/**,/public/token/**
+        - id: business-service
+          uri: lb://business-service
+          predicates:
+            - Path=/test/**
+          filters:
+            - PreAuthFilter
