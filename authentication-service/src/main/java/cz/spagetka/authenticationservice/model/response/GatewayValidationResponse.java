@@ -1,4 +1,4 @@
-package cz.spagetka.apigateway.model.responses;
+package cz.spagetka.authenticationservice.model.response;
 
 public record GatewayValidationResponse(
         String userId, String username, String email, String userRole,

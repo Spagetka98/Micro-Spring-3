@@ -48,9 +48,14 @@ public class PreAuthFilter extends AbstractGatewayFilterFactory<PreAuthFilter.Co
                         .header(EHeaders.AUTHORIZATION.getHeaderName(), bearerToken)
                         .retrieve().bodyToMono(GatewayValidationResponse.class)
                         .map(response -> {
-                            exchange.getRequest().mutate().header(EHeaders.USERNAME.getHeaderName(), response.username());
-                            exchange.getRequest().mutate().header(EHeaders.USER_ID.getHeaderName(), response.userID());
-                            exchange.getRequest().mutate().header(EHeaders.ROLES.getHeaderName(), response.roles().toString());
+                            exchange.getRequest().mutate().header(EHeaders.USER_ID.getHeaderName(), response.userId());
+                            exchange.getRequest().mutate().header(EHeaders.USERNAME.getHeaderName(), response.email());
+                            exchange.getRequest().mutate().header(EHeaders.EMAIL.getHeaderName(), response.username());
+                            exchange.getRequest().mutate().header(EHeaders.ROLE.getHeaderName(), response.userRole());
+                            exchange.getRequest().mutate().header(EHeaders.IS_ACCOUNT_NON_EXPIRED.getHeaderName(), String.valueOf(response.isAccountNonExpired()));
+                            exchange.getRequest().mutate().header(EHeaders.IS_ACCOUNT_NON_LOCKED.getHeaderName(), String.valueOf(response.isAccountNonLocked()));
+                            exchange.getRequest().mutate().header(EHeaders.IS_CREDENTIALS_NON_EXPIRED.getHeaderName(), String.valueOf(response.isCredentialsNonExpired()));
+                            exchange.getRequest().mutate().header(EHeaders.IS_ENABLED.getHeaderName(), String.valueOf(response.isEnabled()));
 
                             return exchange;
                         }).flatMap(chain::filter).onErrorResume(error -> {
