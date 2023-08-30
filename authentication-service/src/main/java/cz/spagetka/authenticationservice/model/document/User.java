@@ -74,7 +74,7 @@ public class User implements UserDetails {
     )
     @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$",
             message = "{validation.email.regexp.not_match}")
-    @Indexed(name = "email_unique_index",unique = true)
+    @Indexed(name = "email_unique_index", unique = true)
     private String email;
 
     @Field(
@@ -144,12 +144,24 @@ public class User implements UserDetails {
     }
 
 
-    public void setJWT(String jwt){
+    public void setJWT(String jwt) {
         this.add(ESchemalessData.JWT.getAttributeName(), jwt);
     }
 
-    public void setRefreshToken(RefreshToken refreshToken){
+    public void setRefreshToken(RefreshToken refreshToken) {
         this.add(ESchemalessData.REFRESH_TOKEN.getAttributeName(), refreshToken);
+    }
+
+    public void removeJWT() {
+        if (this.getSchemalessData() != null) {
+            this.getSchemalessData().remove(ESchemalessData.JWT.getAttributeName());
+        }
+    }
+
+    public void removeRefreshToken() {
+        if (this.getSchemalessData() != null) {
+            this.getSchemalessData().remove(ESchemalessData.REFRESH_TOKEN.getAttributeName());
+        }
     }
 
     @Override

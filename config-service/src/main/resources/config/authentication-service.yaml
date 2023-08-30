@@ -14,10 +14,10 @@ spring:
 
 token:
   refresh:
+    cookie_name: "RefreshToken"
     hoursLength: 1
   jwt:
-    header_name: "Authorization"
-    header_starts_with: "Bearer "
+    cookie_name: "JWT"
     secret_key: "/zqoQPuHhmPtCLUbKMD1jJ8HzW1G2KXNRrkGKBACMRNFQOVLDU5bgC/LgmTdjk3V"
     secondsLength: 900
 
