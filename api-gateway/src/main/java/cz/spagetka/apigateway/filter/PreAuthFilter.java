@@ -39,10 +39,11 @@ public class PreAuthFilter extends AbstractGatewayFilterFactory<PreAuthFilter.Co
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
 
-            String jwt = this.getCookieValueByName(request,gatewayProperties.cookieNameJWT())
-                    .orElse("PUBLIC");
-
             if (gatewayProperties.excludedUrls().stream().noneMatch(uri -> request.getURI().getPath().contains(uri))) {
+
+                String jwt = this.getCookieValueByName(request,gatewayProperties.cookieNameJWT())
+                        .orElse("");
+
                 return webClientBuilder.build().get()
                         .uri(gatewayProperties.validationURI())
                         .cookie(gatewayProperties.cookieNameJWT(), jwt)

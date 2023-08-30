@@ -1,6 +1,7 @@
 package cz.spagetka.authenticationservice.security.filter;
 
 import cz.spagetka.authenticationservice.exception.JwtExpirationException;
+import cz.spagetka.authenticationservice.exception.MissingJwtException;
 import cz.spagetka.authenticationservice.properties.JwtProperties;
 import cz.spagetka.authenticationservice.model.document.User;
 import cz.spagetka.authenticationservice.exception.UserNotFoundException;
@@ -32,14 +33,15 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        getCookieValueByName(request, jwtProperties.cookie_name())
-                .ifPresent((jwt) -> {
-                    if (jwtTokenServiceImpl.isTokenValid(jwt)) {
-                        this.checkJwtAssociation(jwt, request);
-                    } else if (this.jwtTokenServiceImpl.isTokenExpired(jwt)) {
-                        throw new JwtExpirationException("JWT is expired!");
-                    }
-                });
+        String jwt = getCookieValueByName(request, jwtProperties.cookie_name())
+                .orElseThrow(() -> new MissingJwtException("The accepted request does not contain a JWT!"));
+
+        if (jwtTokenServiceImpl.isTokenValid(jwt)) {
+            this.checkJwtAssociation(jwt, request);
+        } else if (this.jwtTokenServiceImpl.isTokenExpired(jwt)) {
+            throw new JwtExpirationException("JWT is expired!");
+        }
+
 
         filterChain.doFilter(request, response);
     }
@@ -47,7 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private Optional<String> getCookieValueByName(HttpServletRequest request, String name) {
         Cookie cookie = WebUtils.getCookie(request, name);
 
-        if (cookie != null) {
+        if (cookie != null && !cookie.getValue().isEmpty()) {
             return Optional.of(cookie.getValue());
         } else {
             return Optional.empty();
