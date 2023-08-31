@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
         RefreshToken refreshToken = this.getNonExpiredUserRefreshToken(loggedUser);
 
-        return new LoginInformation(loggedUser.getUsername(), loggedUser.getEmail(), loggedUser.getRole(), jwtToken, refreshToken);
+        return new LoginInformation(loggedUser.getUserId().toString(),loggedUser.getUsername(), loggedUser.getEmail(), loggedUser.getRole(), jwtToken, refreshToken);
     }
 
     @Override
