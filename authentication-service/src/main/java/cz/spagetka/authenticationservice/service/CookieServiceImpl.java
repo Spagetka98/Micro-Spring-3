@@ -19,7 +19,7 @@ public class CookieServiceImpl implements CookieService {
                 .from(jwtProperties.cookie_name(), jwt)
                 .path("/")
                 .maxAge(jwtProperties.secondsLength())
-                .domain("localhost")
+                .sameSite("None")
                 .httpOnly(true)
                 .secure(true)
                 .build();
@@ -31,7 +31,7 @@ public class CookieServiceImpl implements CookieService {
                 .from(refreshTokenProperties.cookie_name(), refreshToken.getToken())
                 .path("/")
                 .maxAge(refreshToken.getExpirationDate().getEpochSecond())
-                .domain("localhost")
+                .sameSite("None")
                 .httpOnly(true)
                 .secure(true)
                 .build();
