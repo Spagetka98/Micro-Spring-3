@@ -1,7 +1,6 @@
 package cz.spagetka.apigateway.model.enums;
 
 public enum EHeaders {
-    AUTHORIZATION("Authorization"),
     USERNAME("Username"),
     USER_ID("UserID"),
     ROLE("Role"),

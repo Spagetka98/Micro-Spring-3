@@ -1,25 +1,26 @@
 package cz.spagetka.authenticationservice.controller;
 
-import cz.spagetka.authenticationservice.model.request.RefreshRequest;
-import cz.spagetka.authenticationservice.model.request.RefreshTokenResponse;
+import cz.spagetka.authenticationservice.model.request.MessageResponse;
+import cz.spagetka.authenticationservice.service.CookieService;
 import cz.spagetka.authenticationservice.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/public/token")
 @RequiredArgsConstructor
 public class RefreshController {
     private final UserService userService;
+    private final CookieService cookieService;
 
-    @PostMapping("/refreshJWT")
-    public RefreshTokenResponse refreshJWT(@Valid @RequestBody RefreshRequest request){
-       String newJwt = this.userService.renewUserJwtToken(request.refreshToken());
+    @GetMapping("/refreshJWT")
+    public ResponseEntity<MessageResponse> refreshJWT(@CookieValue(name = "RefreshToken") String refreshToken){
+       String newJwt = this.userService.renewUserJwtToken(refreshToken);
 
-       return new RefreshTokenResponse(newJwt);
+       return ResponseEntity.ok()
+               .header(HttpHeaders.SET_COOKIE,cookieService.getJwtCookie(newJwt).toString())
+               .body(new MessageResponse("Token is refreshed successfully!"));
     }
 }

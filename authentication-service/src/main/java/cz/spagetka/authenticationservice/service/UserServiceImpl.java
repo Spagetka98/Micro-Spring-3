@@ -3,9 +3,9 @@ package cz.spagetka.authenticationservice.service;
 import com.mongodb.MongoWriteException;
 import cz.spagetka.authenticationservice.exception.*;
 import cz.spagetka.authenticationservice.model.document.embedded.RefreshToken;
+import cz.spagetka.authenticationservice.model.dto.LoginInformation;
 import cz.spagetka.authenticationservice.model.request.LoginRequest;
 import cz.spagetka.authenticationservice.model.request.RegisterRequest;
-import cz.spagetka.authenticationservice.model.response.LoginResponse;
 import cz.spagetka.authenticationservice.model.document.User;
 import cz.spagetka.authenticationservice.model.enums.ERole;
 import cz.spagetka.authenticationservice.repository.UserRepository;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public LoginResponse loginUser(LoginRequest request) {
+    public LoginInformation loginUser(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
 
@@ -69,7 +69,16 @@ public class UserServiceImpl implements UserService {
 
         RefreshToken refreshToken = this.getNonExpiredUserRefreshToken(loggedUser);
 
-        return new LoginResponse(loggedUser.getUsername(), loggedUser.getEmail(), loggedUser.getRole(), jwtToken, refreshToken.getToken());
+        return new LoginInformation(loggedUser.getUserId().toString(),loggedUser.getUsername(), loggedUser.getEmail(), loggedUser.getRole(), jwtToken, refreshToken);
+    }
+
+    @Override
+    public void logout(User user) {
+        user.removeJWT();
+
+        user.removeRefreshToken();
+
+        this.userRepository.save(user);
     }
 
     @Override
@@ -113,6 +122,4 @@ public class UserServiceImpl implements UserService {
         else
             return this.getNonExpiredUserJwtToken(user);
     }
-
-
 }

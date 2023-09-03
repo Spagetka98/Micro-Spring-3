@@ -1,4 +1,4 @@
 package cz.spagetka.authenticationservice.model.request;
 
-public record RefreshTokenResponse(String newJwt) {
+public record MessageResponse(String message) {
 }

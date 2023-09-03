@@ -3,6 +3,7 @@ package cz.spagetka.authenticationservice.service;
 import cz.spagetka.authenticationservice.exception.InvalidJwtException;
 import cz.spagetka.authenticationservice.properties.JwtProperties;
 import cz.spagetka.authenticationservice.model.document.User;
+import cz.spagetka.authenticationservice.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
