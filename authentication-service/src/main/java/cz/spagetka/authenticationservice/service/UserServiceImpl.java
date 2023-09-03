@@ -6,7 +6,6 @@ import cz.spagetka.authenticationservice.model.document.embedded.RefreshToken;
 import cz.spagetka.authenticationservice.model.dto.LoginInformation;
 import cz.spagetka.authenticationservice.model.request.LoginRequest;
 import cz.spagetka.authenticationservice.model.request.RegisterRequest;
-import cz.spagetka.authenticationservice.model.response.LoginResponse;
 import cz.spagetka.authenticationservice.model.document.User;
 import cz.spagetka.authenticationservice.model.enums.ERole;
 import cz.spagetka.authenticationservice.repository.UserRepository;
