@@ -11,6 +11,20 @@ spring:
     mongodb:
       name: USER_DB
       uri: mongodb+srv://AdminDB:Spagetka1@cluster0.u5rct18.mongodb.net/USER_DB?retryWrites=true&w=majority
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: projecttestemail98@gmail.com
+    password: jdssdqotnhfzzeew
+    properties:
+      mail:
+        mime:
+          charset: UTF
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 token:
   refresh:

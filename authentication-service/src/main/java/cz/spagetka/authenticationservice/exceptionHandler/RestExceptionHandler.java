@@ -4,6 +4,7 @@ import cz.spagetka.authenticationservice.exception.*;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,6 +21,12 @@ public class RestExceptionHandler {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse badRequestException(Exception exception, WebRequest request) {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), Instant.now().toString());
+    }
+
+    @ExceptionHandler({DisabledException.class})
+    @ResponseStatus(value = HttpStatus.LOCKED)
+    public ErrorResponse disabledException(Exception exception, WebRequest request) {
+        return new ErrorResponse(HttpStatus.LOCKED.value(), exception.getMessage(), Instant.now().toString());
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})

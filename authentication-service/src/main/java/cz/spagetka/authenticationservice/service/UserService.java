@@ -23,4 +23,6 @@ public interface UserService {
     String renewUserJwtToken(@NotBlank(message = "Parameter refreshToken cannot be null or empty!") String refreshToken);
 
     void logout(@NotNull(message = "Parameter user cannot be null!") User user);
+
+    void emailVerification(@NotBlank(message =  "Parameter verificationToken cannot be null or empty!") String verificationToken);
 }

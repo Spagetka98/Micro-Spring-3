@@ -3,6 +3,7 @@ package cz.spagetka.authenticationservice.service;
 import com.mongodb.MongoWriteException;
 import cz.spagetka.authenticationservice.exception.*;
 import cz.spagetka.authenticationservice.model.document.embedded.RefreshToken;
+import cz.spagetka.authenticationservice.model.document.embedded.VerificationToken;
 import cz.spagetka.authenticationservice.model.dto.LoginInformation;
 import cz.spagetka.authenticationservice.model.request.LoginRequest;
 import cz.spagetka.authenticationservice.model.request.RegisterRequest;
@@ -17,12 +18,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JwtTokenService jwtTokenService;
     private final RefreshTokenService refreshTokenService;
+    private final VerificationTokenService verificationTokenService;
+    private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
@@ -35,20 +41,7 @@ public class UserServiceImpl implements UserService {
             throw new UserInformationTaken(String.format("Email %s is taken by another user!", request.email()));
 
         try {
-            User newUser = User.builder()
-                    .username(request.username())
-                    .firstName(request.firstName())
-                    .lastName(request.lastName())
-                    .email(request.email())
-                    .password(passwordEncoder.encode(request.password()))
-                    .role(ERole.USER)
-                    .isAccountNonExpired(true)
-                    .isAccountNonLocked(true)
-                    .isCredentialsNonExpired(true)
-                    .isEnabled(true)
-                    .build();
-
-            this.userRepository.save(newUser);
+            this.createNewUserAccount(request);
         } catch (MongoWriteException e) {
             throw new MongoDuplicateKeyException("Write operation error due to duplicate index key!");
         } catch (Exception e) {
@@ -79,6 +72,11 @@ public class UserServiceImpl implements UserService {
         user.removeRefreshToken();
 
         this.userRepository.save(user);
+    }
+
+    @Override
+    public void emailVerification(String verificationToken) {
+        //TODO
     }
 
     @Override
@@ -122,4 +120,26 @@ public class UserServiceImpl implements UserService {
         else
             return this.getNonExpiredUserJwtToken(user);
     }
+
+    private void createNewUserAccount(RegisterRequest request){
+        User newUser = User.builder()
+                .username(request.username())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .role(ERole.USER)
+                .isAccountNonExpired(true)
+                .isAccountNonLocked(true)
+                .isCredentialsNonExpired(true)
+                .isEnabled(false)
+                .build();
+
+        newUser.setVerificationToken(this.verificationTokenService.createVerificationToken());
+
+        this.userRepository.save(newUser);
+
+        this.emailService.sendUserVerificationEmail(newUser.getEmail(),newUser.getVerificationToken().toString());
+    }
+
 }
