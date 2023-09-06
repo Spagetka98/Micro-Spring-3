@@ -1,16 +1,13 @@
 package cz.spagetka.authenticationservice.security.filter;
 
-import cz.spagetka.authenticationservice.exception.InvalidJwtException;
-import cz.spagetka.authenticationservice.exception.JwtExpirationException;
+import cz.spagetka.authenticationservice.exception.jwt.InvalidJwtException;
+import cz.spagetka.authenticationservice.exception.jwt.JwtExpirationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 

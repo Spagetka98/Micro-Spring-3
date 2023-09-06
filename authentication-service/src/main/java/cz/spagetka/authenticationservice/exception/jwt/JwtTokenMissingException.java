@@ -1,4 +1,4 @@
-package cz.spagetka.authenticationservice.exception;
+package cz.spagetka.authenticationservice.exception.jwt;
 
 public class JwtTokenMissingException extends RuntimeException {
     public JwtTokenMissingException() {

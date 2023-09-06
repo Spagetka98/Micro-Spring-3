@@ -9,7 +9,6 @@ import cz.spagetka.authenticationservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +21,12 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public void registerUser(@Valid @RequestBody RegisterRequest request) {
-        this.userService.registerUser(request);
+        this.userService.register(request);
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginRequest request){
-        LoginInformation loginInformation = this.userService.loginUser(request);
+        LoginInformation loginInformation = this.userService.login(request);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookieService.getJwtCookie(loginInformation.jwtToken()).toString())

@@ -20,7 +20,7 @@ spring:
         - id: authentication-service
           uri: lb://authentication-service
           predicates:
-            - Path=/public/auth/**,/secured/**,/public/token/**
+            - Path=/public/**,/secured/**
         - id: business-service
           uri: lb://business-service
           predicates:

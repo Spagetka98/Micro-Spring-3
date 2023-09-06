@@ -3,6 +3,7 @@ package cz.spagetka.authenticationservice.model.document;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import cz.spagetka.authenticationservice.model.document.embedded.RefreshToken;
+import cz.spagetka.authenticationservice.model.document.embedded.VerificationToken;
 import cz.spagetka.authenticationservice.model.enums.ERole;
 import cz.spagetka.authenticationservice.model.enums.ESchemalessData;
 import jakarta.validation.constraints.*;
@@ -143,6 +144,13 @@ public class User implements UserDetails {
             return Optional.of((RefreshToken) this.getSchemalessData().get(ESchemalessData.REFRESH_TOKEN.getAttributeName()));
     }
 
+    public Optional<VerificationToken> getVerificationToken() {
+        if (this.getSchemalessData() == null || !this.getSchemalessData().containsKey(ESchemalessData.VERIFICATION_TOKEN.getAttributeName()))
+            return Optional.empty();
+        else
+            return Optional.of((VerificationToken) this.getSchemalessData().get(ESchemalessData.VERIFICATION_TOKEN.getAttributeName()));
+    }
+
 
     public void setJWT(String jwt) {
         this.add(ESchemalessData.JWT.getAttributeName(), jwt);
@@ -150,6 +158,10 @@ public class User implements UserDetails {
 
     public void setRefreshToken(RefreshToken refreshToken) {
         this.add(ESchemalessData.REFRESH_TOKEN.getAttributeName(), refreshToken);
+    }
+
+    public void setVerificationToken(VerificationToken verificationToken) {
+        this.add(ESchemalessData.VERIFICATION_TOKEN.getAttributeName(), verificationToken);
     }
 
     public void removeJWT() {
@@ -161,6 +173,12 @@ public class User implements UserDetails {
     public void removeRefreshToken() {
         if (this.getSchemalessData() != null) {
             this.getSchemalessData().remove(ESchemalessData.REFRESH_TOKEN.getAttributeName());
+        }
+    }
+
+    public void removeVerificationToken() {
+        if (this.getSchemalessData() != null) {
+            this.getSchemalessData().remove(ESchemalessData.VERIFICATION_TOKEN.getAttributeName());
         }
     }
 

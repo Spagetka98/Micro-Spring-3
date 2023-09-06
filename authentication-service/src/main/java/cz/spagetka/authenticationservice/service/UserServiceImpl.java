@@ -1,8 +1,15 @@
 package cz.spagetka.authenticationservice.service;
 
 import com.mongodb.MongoWriteException;
-import cz.spagetka.authenticationservice.exception.*;
+import cz.spagetka.authenticationservice.exception.mongo.MongoDuplicateKeyException;
+import cz.spagetka.authenticationservice.exception.refreshToken.InvalidRefreshTokenException;
+import cz.spagetka.authenticationservice.exception.refreshToken.RefreshTokenExpirationException;
+import cz.spagetka.authenticationservice.exception.user.UserInformationTaken;
+import cz.spagetka.authenticationservice.exception.user.UserNotFoundException;
+import cz.spagetka.authenticationservice.exception.verificationToken.MissingVerificationTokenException;
+import cz.spagetka.authenticationservice.exception.verificationToken.VerificationTokenExpirationException;
 import cz.spagetka.authenticationservice.model.document.embedded.RefreshToken;
+import cz.spagetka.authenticationservice.model.document.embedded.VerificationToken;
 import cz.spagetka.authenticationservice.model.dto.LoginInformation;
 import cz.spagetka.authenticationservice.model.request.LoginRequest;
 import cz.spagetka.authenticationservice.model.request.RegisterRequest;
@@ -17,17 +24,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JwtTokenService jwtTokenService;
     private final RefreshTokenService refreshTokenService;
+    private final VerificationTokenService verificationTokenService;
+    private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void registerUser(RegisterRequest request) {
+    public void register(RegisterRequest request) {
         if (this.userRepository.existsByUsername(request.username()))
             throw new UserInformationTaken(String.format("Username %s is taken by another user!", request.username()));
 
@@ -35,20 +47,7 @@ public class UserServiceImpl implements UserService {
             throw new UserInformationTaken(String.format("Email %s is taken by another user!", request.email()));
 
         try {
-            User newUser = User.builder()
-                    .username(request.username())
-                    .firstName(request.firstName())
-                    .lastName(request.lastName())
-                    .email(request.email())
-                    .password(passwordEncoder.encode(request.password()))
-                    .role(ERole.USER)
-                    .isAccountNonExpired(true)
-                    .isAccountNonLocked(true)
-                    .isCredentialsNonExpired(true)
-                    .isEnabled(true)
-                    .build();
-
-            this.userRepository.save(newUser);
+            this.createNewUserAccount(request);
         } catch (MongoWriteException e) {
             throw new MongoDuplicateKeyException("Write operation error due to duplicate index key!");
         } catch (Exception e) {
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public LoginInformation loginUser(LoginRequest request) {
+    public LoginInformation login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
 
@@ -69,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
         RefreshToken refreshToken = this.getNonExpiredUserRefreshToken(loggedUser);
 
-        return new LoginInformation(loggedUser.getUserId().toString(),loggedUser.getUsername(), loggedUser.getEmail(), loggedUser.getRole(), jwtToken, refreshToken);
+        return new LoginInformation(loggedUser.getUserId().toString(), loggedUser.getUsername(), loggedUser.getEmail(), loggedUser.getRole(), jwtToken, refreshToken);
     }
 
     @Override
@@ -77,6 +76,21 @@ public class UserServiceImpl implements UserService {
         user.removeJWT();
 
         user.removeRefreshToken();
+
+        this.userRepository.save(user);
+    }
+
+    @Override
+    public void userEmailVerification(String verificationToken) {
+        User user = this.userRepository.findByVerificationToken(verificationToken)
+                .orElseThrow(() -> new MissingVerificationTokenException(String.format("Could not find a user with verification token: %s", verificationToken)));
+
+        if (this.verificationTokenService.isVerificationTokenExpired(user.getVerificationToken().get()))
+            throw new VerificationTokenExpirationException(String.format("Verification token of user with id: %s", user.getUserId().toString()));
+
+        user.setEnabled(true);
+
+        user.removeVerificationToken();
 
         this.userRepository.save(user);
     }
@@ -122,4 +136,28 @@ public class UserServiceImpl implements UserService {
         else
             return this.getNonExpiredUserJwtToken(user);
     }
+
+    private void createNewUserAccount(RegisterRequest request) {
+        User newUser = User.builder()
+                .username(request.username())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .role(ERole.USER)
+                .isAccountNonExpired(true)
+                .isAccountNonLocked(true)
+                .isCredentialsNonExpired(true)
+                .isEnabled(false)
+                .build();
+
+        VerificationToken newToken = this.verificationTokenService.createVerificationToken();
+
+        newUser.setVerificationToken(newToken);
+
+        this.userRepository.save(newUser);
+
+        this.emailService.sendUserVerificationEmail(newUser.getEmail(), newToken.getToken());
+    }
+
 }
