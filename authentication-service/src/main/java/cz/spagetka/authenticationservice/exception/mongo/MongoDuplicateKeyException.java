@@ -1,4 +1,4 @@
-package cz.spagetka.authenticationservice.exception;
+package cz.spagetka.authenticationservice.exception.mongo;
 
 public class MongoDuplicateKeyException extends RuntimeException {
     public MongoDuplicateKeyException() {

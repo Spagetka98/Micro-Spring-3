@@ -13,15 +13,10 @@ public class VerificationToken {
     @Field(
             name = "Token"
     )
-    private UUID token;
+    private String token;
 
     @Field(
             name = "Expiration_date"
     )
     private Instant expirationDate;
-
-    @Field(
-            name = "Creation_date"
-    )
-    private Instant creationDate;
 }

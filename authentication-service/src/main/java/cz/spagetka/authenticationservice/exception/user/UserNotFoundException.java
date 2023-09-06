@@ -1,4 +1,4 @@
-package cz.spagetka.authenticationservice.exception;
+package cz.spagetka.authenticationservice.exception.user;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException() {

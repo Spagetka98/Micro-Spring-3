@@ -1,10 +1,10 @@
 package cz.spagetka.authenticationservice.security.filter;
 
-import cz.spagetka.authenticationservice.exception.JwtExpirationException;
-import cz.spagetka.authenticationservice.exception.MissingJwtException;
+import cz.spagetka.authenticationservice.exception.jwt.JwtExpirationException;
+import cz.spagetka.authenticationservice.exception.jwt.MissingJwtException;
 import cz.spagetka.authenticationservice.properties.JwtProperties;
 import cz.spagetka.authenticationservice.model.document.User;
-import cz.spagetka.authenticationservice.exception.UserNotFoundException;
+import cz.spagetka.authenticationservice.exception.user.UserNotFoundException;
 import cz.spagetka.authenticationservice.repository.UserRepository;
 import cz.spagetka.authenticationservice.service.JwtTokenService;
 import jakarta.servlet.FilterChain;

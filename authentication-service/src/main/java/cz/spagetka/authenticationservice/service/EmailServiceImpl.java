@@ -24,7 +24,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendUserVerificationEmail(String userEmail,String userVerificationToken) {
         final String SUBJECT = "Potvrzení emailu!";
-        final String TEXT = String.format("localhost:4200/verification/%s",userEmail);
+        final String TEXT = String.format("Potvrzení provedete zde: http://localhost:4200/verification/%s",userVerificationToken);
 
         this.sendEmail(SUBJECT,userEmail,TEXT);
     }

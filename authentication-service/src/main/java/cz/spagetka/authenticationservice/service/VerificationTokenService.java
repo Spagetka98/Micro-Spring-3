@@ -7,4 +7,6 @@ import org.springframework.validation.annotation.Validated;
 public interface VerificationTokenService {
 
     VerificationToken createVerificationToken();
+
+    boolean isVerificationTokenExpired(VerificationToken verificationToken);
 }

@@ -1,4 +1,4 @@
-package cz.spagetka.authenticationservice.exception;
+package cz.spagetka.authenticationservice.exception.refreshToken;
 
 public class InvalidRefreshTokenException extends RuntimeException {
     public InvalidRefreshTokenException() {

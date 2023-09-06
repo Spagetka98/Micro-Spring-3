@@ -13,14 +13,17 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Override
     public VerificationToken createVerificationToken() {
         final int SEVEN_DAYS_EXPIRATION_SECONDS = 7 * 24 * 60 * 60;
-        final UUID TOKEN_VALUE = UUID.randomUUID();
+        final String TOKEN_VALUE = UUID.randomUUID().toString();
         final Instant EXPIRATION_DATA = Instant.now().plusSeconds(SEVEN_DAYS_EXPIRATION_SECONDS);
-        final Instant CREATION_DATE = Instant.now();
 
         return VerificationToken.builder()
                 .token(TOKEN_VALUE)
                 .expirationDate(EXPIRATION_DATA)
-                .creationDate(CREATION_DATE)
                 .build();
+    }
+
+    @Override
+    public boolean isVerificationTokenExpired(VerificationToken verificationToken) {
+        return Instant.now().isAfter(verificationToken.getExpirationDate());
     }
 }
