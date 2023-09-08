@@ -17,6 +17,8 @@ public interface UserRepository extends MongoRepository<User,String> {
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByEmail(String email);
+
     @Query(value = "{'SchemalessData.RefreshToken.Token': ?0 }")
     Optional<User> findByRefreshToken(String refreshToken);
 
@@ -25,4 +27,8 @@ public interface UserRepository extends MongoRepository<User,String> {
 
     @DeleteQuery(value = "{'SchemalessData.VerificationToken.Expiration_date': {'$lt': ?0 },'IsEnabled': false}")
     void deleteUnVerifiedAccountsOlderThan(Instant date);
+
+    @Query(value = "{'SchemalessData.PasswordToken.Token': ?0 }")
+    Optional<User> findByPasswordToken(String passwordToken);
+
 }

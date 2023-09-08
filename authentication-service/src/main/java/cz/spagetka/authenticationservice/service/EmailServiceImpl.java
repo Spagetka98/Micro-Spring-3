@@ -28,4 +28,12 @@ public class EmailServiceImpl implements EmailService {
 
         this.sendEmail(SUBJECT,userEmail,TEXT);
     }
+
+    @Override
+    public void sendPasswordResetEmail(String userEmail, String passwordToken) {
+        final String SUBJECT = "Reset hesla!";
+        final String TEXT = String.format("Reset hesla provedete zde: http://localhost:4200/password/%s",passwordToken);
+
+        this.sendEmail(SUBJECT,userEmail,TEXT);
+    }
 }

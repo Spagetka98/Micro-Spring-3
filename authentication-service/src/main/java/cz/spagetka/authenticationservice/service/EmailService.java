@@ -13,4 +13,9 @@ public interface EmailService {
     void sendUserVerificationEmail(
             @NotBlank(message = "Parameter userEmail cannot be null or empty!") String userEmail,
             @NotBlank(message = "Parameter userVerificationToken cannot be null or empty!") String userVerificationToken);
+
+    void sendPasswordResetEmail(
+            @NotBlank(message = "Parameter userEmail cannot be null or empty!") String userEmail,
+            @NotBlank(message = "Parameter passwordToken cannot be null or empty!") String passwordToken);
+
 }

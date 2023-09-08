@@ -2,12 +2,16 @@ package cz.spagetka.authenticationservice.service;
 
 import com.mongodb.MongoWriteException;
 import cz.spagetka.authenticationservice.exception.mongo.MongoDuplicateKeyException;
+import cz.spagetka.authenticationservice.exception.passwordToken.MissingPasswordTokenException;
+import cz.spagetka.authenticationservice.exception.passwordToken.PasswordTokenExpirationException;
 import cz.spagetka.authenticationservice.exception.refreshToken.InvalidRefreshTokenException;
 import cz.spagetka.authenticationservice.exception.refreshToken.RefreshTokenExpirationException;
+import cz.spagetka.authenticationservice.exception.user.IncorrectPasswordException;
 import cz.spagetka.authenticationservice.exception.user.UserInformationTaken;
 import cz.spagetka.authenticationservice.exception.user.UserNotFoundException;
 import cz.spagetka.authenticationservice.exception.verificationToken.MissingVerificationTokenException;
 import cz.spagetka.authenticationservice.exception.verificationToken.VerificationTokenExpirationException;
+import cz.spagetka.authenticationservice.model.document.embedded.PasswordToken;
 import cz.spagetka.authenticationservice.model.document.embedded.RefreshToken;
 import cz.spagetka.authenticationservice.model.document.embedded.VerificationToken;
 import cz.spagetka.authenticationservice.model.dto.LoginInformation;
@@ -24,9 +28,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.Date;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenService jwtTokenService;
     private final RefreshTokenService refreshTokenService;
     private final VerificationTokenService verificationTokenService;
+    private final PasswordTokenService passwordTokenService;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
@@ -91,6 +93,38 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
 
         user.removeVerificationToken();
+
+        this.userRepository.save(user);
+    }
+
+    @Override
+    public void sendResetRequest(String userEmail) {
+        User user = this.userRepository.findByEmail(userEmail)
+                .orElseThrow(()-> new UserNotFoundException(String.format("User with email: %s was not found!",userEmail)));
+
+        PasswordToken passwordToken = this.passwordTokenService.createPasswordToken();
+
+        user.setPasswordToken(passwordToken);
+
+        this.userRepository.save(user);
+
+        this.emailService.sendPasswordResetEmail(userEmail,passwordToken.getToken());
+    }
+
+    @Override
+    public void resetPassword(String passwordToken, String oldPassword, String newPassword) {
+        User user = this.userRepository.findByPasswordToken(passwordToken)
+                .orElseThrow(() -> new MissingPasswordTokenException(String.format("Could not find a user with password token: %s", passwordToken)));
+
+        if(this.passwordTokenService.isPasswordTokenExpired(user.getPasswordToken().get()))
+            throw new PasswordTokenExpirationException(String.format("Password token of user with id: %s", user.getUserId().toString()));
+
+        if(!this.passwordEncoder.matches(oldPassword,user.getPassword()))
+            throw new IncorrectPasswordException("Incorrect password!");
+
+        user.setPassword(this.passwordEncoder.encode(newPassword));
+
+        user.removePasswordToken();
 
         this.userRepository.save(user);
     }
