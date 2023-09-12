@@ -1,4 +1,4 @@
 package cz.spagetka.authenticationservice.model.response;
 
-public record ErrorResponse(int statusCode, String errorMsg, String creationTime) {
+public record ErrorResponse(int statusCode, String message, String timestamp) {
 }
