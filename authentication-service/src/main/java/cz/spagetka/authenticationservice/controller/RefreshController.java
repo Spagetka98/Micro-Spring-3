@@ -1,6 +1,6 @@
 package cz.spagetka.authenticationservice.controller;
 
-import cz.spagetka.authenticationservice.model.request.MessageResponse;
+import cz.spagetka.authenticationservice.model.response.MessageResponse;
 import cz.spagetka.authenticationservice.service.CookieService;
 import cz.spagetka.authenticationservice.service.UserService;
 import lombok.RequiredArgsConstructor;

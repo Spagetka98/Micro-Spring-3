@@ -30,7 +30,8 @@ import java.util.List;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler({ConstraintViolationException.class, RefreshTokenExpirationException.class, MissingVerificationTokenException.class, MissingPasswordTokenException.class})
+    @ExceptionHandler({ConstraintViolationException.class, RefreshTokenExpirationException.class, MissingVerificationTokenException.class,
+            MissingPasswordTokenException.class, IncorrectPasswordException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse badRequestException(Exception exception, WebRequest request) {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), Instant.now().toString());
@@ -56,19 +57,13 @@ public class RestExceptionHandler {
         return new ErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage(), Instant.now().toString());
     }
 
-    @ExceptionHandler({JwtExpirationException.class})
-    @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public ErrorResponse jwtExpirationException(Exception exception, WebRequest request) {
-        return new ErrorResponse(HttpStatus.FORBIDDEN.value(), exception.getMessage(), Instant.now().toString());
-    }
-
     @ExceptionHandler({InvalidJwtException.class, InvalidRefreshTokenException.class, UserNotFoundException.class, IllegalStateException.class})
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse InvalidJwtExpirationException(Exception exception, WebRequest request) {
         return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage(), Instant.now().toString());
     }
 
-    @ExceptionHandler({MissingJwtException.class, IncorrectPasswordException.class})
+    @ExceptionHandler({MissingJwtException.class, JwtExpirationException.class})
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public ErrorResponse unauthorizedException(Exception exception, WebRequest request) {
         return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), exception.getMessage(), Instant.now().toString());

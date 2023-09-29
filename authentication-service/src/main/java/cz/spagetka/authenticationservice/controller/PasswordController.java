@@ -17,8 +17,8 @@ public class PasswordController {
         this.userService.sendResetRequest(forgetPasswordRequest.email());
     }
 
-    @PostMapping("/resetPassword")
-    public void resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest){
-        this.userService.resetPassword(resetPasswordRequest.passwordToken(),resetPasswordRequest.oldPassword(),resetPasswordRequest.newPassword());
+    @PostMapping("/resetPasswordByToken")
+    public void resetPasswordByToken(@RequestBody ResetPasswordRequest resetPasswordRequest){
+        this.userService.resetPasswordWithToken(resetPasswordRequest.passwordToken(),resetPasswordRequest.newPassword());
     }
 }

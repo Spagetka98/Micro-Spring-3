@@ -27,8 +27,7 @@ public interface UserService {
 
     void sendResetRequest(@NotBlank(message =  "Parameter userEmail cannot be null or empty!") String userEmail);
 
-    void resetPassword(
+    void resetPasswordWithToken(
             @NotBlank(message =  "Parameter passwordToken cannot be null or empty!")String passwordToken,
-            @NotBlank(message =  "Parameter oldPassword cannot be null or empty!")String oldPassword,
             @NotBlank(message =  "Parameter newPassword cannot be null or empty!")String newPassword);
 }

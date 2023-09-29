@@ -112,15 +112,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String passwordToken, String oldPassword, String newPassword) {
+    public void resetPasswordWithToken(String passwordToken, String newPassword) {
         User user = this.userRepository.findByPasswordToken(passwordToken)
                 .orElseThrow(() -> new MissingPasswordTokenException(String.format("Could not find a user with password token: %s", passwordToken)));
 
         if(this.passwordTokenService.isPasswordTokenExpired(user.getPasswordToken().get()))
             throw new PasswordTokenExpirationException(String.format("Password token of user with id: %s", user.getUserId().toString()));
-
-        if(!this.passwordEncoder.matches(oldPassword,user.getPassword()))
-            throw new IncorrectPasswordException("Incorrect password!");
 
         user.setPassword(this.passwordEncoder.encode(newPassword));
 

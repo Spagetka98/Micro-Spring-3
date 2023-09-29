@@ -1,7 +1,7 @@
 package cz.spagetka.authenticationservice.controller;
 
 import cz.spagetka.authenticationservice.model.document.User;
-import cz.spagetka.authenticationservice.model.request.MessageResponse;
+import cz.spagetka.authenticationservice.model.response.MessageResponse;
 import cz.spagetka.authenticationservice.service.CookieService;
 import cz.spagetka.authenticationservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class UserController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE,cookieService.cleanJwtCookie().toString())
                 .header(HttpHeaders.SET_COOKIE,cookieService.cleanRefreshTokenCookie().toString())
-                .body(new MessageResponse("Logout was successfully!"));
+                .body(new MessageResponse("Logout was successful!"));
     }
 
 }
