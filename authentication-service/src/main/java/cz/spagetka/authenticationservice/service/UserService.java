@@ -24,4 +24,10 @@ public interface UserService {
     void logout(@NotNull(message = "Parameter user cannot be null!") User user);
 
     void userEmailVerification(@NotBlank(message =  "Parameter verificationToken cannot be null or empty!") String verificationToken);
+
+    void sendResetRequest(@NotBlank(message =  "Parameter userEmail cannot be null or empty!") String userEmail);
+
+    void resetPasswordWithToken(
+            @NotBlank(message =  "Parameter passwordToken cannot be null or empty!")String passwordToken,
+            @NotBlank(message =  "Parameter newPassword cannot be null or empty!")String newPassword);
 }

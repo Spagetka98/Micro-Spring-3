@@ -9,6 +9,7 @@ import cz.spagetka.authenticationservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ public class AuthenticationController {
     private final CookieService cookieService;
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@Valid @RequestBody RegisterRequest request) {
         this.userService.register(request);
     }

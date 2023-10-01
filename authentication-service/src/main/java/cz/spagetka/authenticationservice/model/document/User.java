@@ -2,6 +2,7 @@ package cz.spagetka.authenticationservice.model.document;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import cz.spagetka.authenticationservice.model.document.embedded.PasswordToken;
 import cz.spagetka.authenticationservice.model.document.embedded.RefreshToken;
 import cz.spagetka.authenticationservice.model.document.embedded.VerificationToken;
 import cz.spagetka.authenticationservice.model.enums.ERole;
@@ -151,6 +152,13 @@ public class User implements UserDetails {
             return Optional.of((VerificationToken) this.getSchemalessData().get(ESchemalessData.VERIFICATION_TOKEN.getAttributeName()));
     }
 
+    public Optional<PasswordToken> getPasswordToken() {
+        if (this.getSchemalessData() == null || !this.getSchemalessData().containsKey(ESchemalessData.PASSWORD_TOKEN.getAttributeName()))
+            return Optional.empty();
+        else
+            return Optional.of((PasswordToken) this.getSchemalessData().get(ESchemalessData.PASSWORD_TOKEN.getAttributeName()));
+    }
+
 
     public void setJWT(String jwt) {
         this.add(ESchemalessData.JWT.getAttributeName(), jwt);
@@ -162,6 +170,10 @@ public class User implements UserDetails {
 
     public void setVerificationToken(VerificationToken verificationToken) {
         this.add(ESchemalessData.VERIFICATION_TOKEN.getAttributeName(), verificationToken);
+    }
+
+    public void setPasswordToken(PasswordToken passwordToken) {
+        this.add(ESchemalessData.PASSWORD_TOKEN.getAttributeName(), passwordToken);
     }
 
     public void removeJWT() {
@@ -179,6 +191,12 @@ public class User implements UserDetails {
     public void removeVerificationToken() {
         if (this.getSchemalessData() != null) {
             this.getSchemalessData().remove(ESchemalessData.VERIFICATION_TOKEN.getAttributeName());
+        }
+    }
+
+    public void removePasswordToken() {
+        if (this.getSchemalessData() != null) {
+            this.getSchemalessData().remove(ESchemalessData.PASSWORD_TOKEN.getAttributeName());
         }
     }
 
