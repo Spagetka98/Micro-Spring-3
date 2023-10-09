@@ -33,6 +33,6 @@ public class AuthenticationController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookieService.getJwtCookie(loginInformation.jwtToken()).toString())
                 .header(HttpHeaders.SET_COOKIE, cookieService.getJwRefreshTokenCookie(loginInformation.refreshToken()).toString())
-                .body(new LoginResponse(loginInformation.userId(),loginInformation.username(), loginInformation.username(), loginInformation.role()));
+                .body(new LoginResponse(loginInformation.userId(),loginInformation.username(), loginInformation.email(), loginInformation.role()));
     }
 }

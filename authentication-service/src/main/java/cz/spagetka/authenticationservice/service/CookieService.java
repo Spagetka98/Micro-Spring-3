@@ -10,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 public interface CookieService {
     ResponseCookie getJwtCookie(@NotBlank(message = "Parameter jwt cannot be null or empty!") String jwt);
     ResponseCookie getJwRefreshTokenCookie(@NotNull(message = "Parameter refreshToken cannot be null!") RefreshToken refreshToken);
-
     ResponseCookie cleanJwtCookie();
     ResponseCookie cleanRefreshTokenCookie();
 }

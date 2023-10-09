@@ -42,7 +42,6 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new JwtExpirationException("JWT is expired!");
         }
 
-
         filterChain.doFilter(request, response);
     }
 

@@ -5,15 +5,16 @@ import cz.spagetka.authenticationservice.model.document.embedded.RefreshToken;
 import cz.spagetka.authenticationservice.model.dto.LoginInformation;
 import cz.spagetka.authenticationservice.model.request.LoginRequest;
 import cz.spagetka.authenticationservice.model.request.RegisterRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
 public interface UserService {
-    void register(@NotNull(message = "Parameter request cannot be null!") RegisterRequest request);
+    void register(@Valid @NotNull(message = "Parameter request cannot be null!") RegisterRequest request);
 
-    LoginInformation login(@NotNull(message = "Parameter request cannot be null!") LoginRequest request);
+    LoginInformation login(@Valid @NotNull(message = "Parameter request cannot be null!") LoginRequest request);
 
     String getNonExpiredUserJwtToken(@NotNull(message = "Parameter user cannot be null!") User user);
 
