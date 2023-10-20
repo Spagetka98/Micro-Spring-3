@@ -17,6 +17,7 @@ import cz.spagetka.authenticationservice.model.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,7 +64,7 @@ public class RestExceptionHandler {
         return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage(), Instant.now().toString());
     }
 
-    @ExceptionHandler({MissingJwtException.class, JwtExpirationException.class})
+    @ExceptionHandler({MissingJwtException.class, JwtExpirationException.class, BadCredentialsException.class})
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public ErrorResponse unauthorizedException(Exception exception, WebRequest request) {
         return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), exception.getMessage(), Instant.now().toString());

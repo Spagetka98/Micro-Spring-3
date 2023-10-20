@@ -2,16 +2,18 @@ package cz.spagetka.authenticationservice.controller;
 
 import cz.spagetka.authenticationservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/public/email")
+@RequestMapping("/public/v1/email")
 @RequiredArgsConstructor
 public class EmailController {
     private final UserService userService;
 
-    @GetMapping("/emailVerification/{verificationToken}")
-    public void emailVerification(@PathVariable("verificationToken") String verificationToken){
-        this.userService.userEmailVerification(verificationToken);
+    @GetMapping("/confirmation")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void emailConfirmation(@RequestParam(value = "token") String token){
+        this.userService.emailConfirmation(token);
     }
 }

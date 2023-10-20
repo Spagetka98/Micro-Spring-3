@@ -51,9 +51,9 @@ public class UserServiceImpl implements UserService {
         try {
             this.createNewUserAccount(request);
         } catch (MongoWriteException e) {
-            throw new MongoDuplicateKeyException("Write operation error due to duplicate index key!");
+            throw new MongoDuplicateKeyException("Write operation failed due to unique index error!");
         } catch (Exception e) {
-            throw new IllegalStateException("Error occurred while saving user!");
+            throw new IllegalStateException("Error occurred while saving user!",e);
         }
 
     }
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void userEmailVerification(String verificationToken) {
+    public void emailConfirmation(String verificationToken) {
         User user = this.userRepository.findByVerificationToken(verificationToken)
                 .orElseThrow(() -> new MissingVerificationTokenException(String.format("Could not find a user with verification token: %s", verificationToken)));
 
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendResetRequest(String userEmail) {
+    public void sendEmailForPasswordReset(String userEmail) {
         User user = this.userRepository.findByEmail(userEmail)
                 .orElseThrow(()-> new UserNotFoundException(String.format("User with email: %s was not found!",userEmail)));
 
@@ -112,12 +112,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPasswordWithToken(String passwordToken, String newPassword) {
+    public void resetPasswordViaToken(String passwordToken, String newPassword) {
         User user = this.userRepository.findByPasswordToken(passwordToken)
                 .orElseThrow(() -> new MissingPasswordTokenException(String.format("Could not find a user with password token: %s", passwordToken)));
 
         if(this.passwordTokenService.isPasswordTokenExpired(user.getPasswordToken().get()))
-            throw new PasswordTokenExpirationException(String.format("Password token of user with id: %s", user.getUserId().toString()));
+            throw new PasswordTokenExpirationException(String.format("Password token of user with id: %s is expired!", user.getUserId().toString()));
 
         user.setPassword(this.passwordEncoder.encode(newPassword));
 
@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String renewUserJwtToken(String refreshToken) {
+    public String renewJWT(String refreshToken) {
         User user = this.userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new UserNotFoundException(String.format("Cannot find a user with refresh token: %s", refreshToken)));
 
@@ -186,9 +186,9 @@ public class UserServiceImpl implements UserService {
 
         newUser.setVerificationToken(newToken);
 
-        this.userRepository.save(newUser);
+        User registeredUser = this.userRepository.save(newUser);
 
-        this.emailService.sendUserVerificationEmail(newUser.getEmail(), newToken.getToken());
+        this.emailService.sendUserVerificationEmail(registeredUser.getEmail(), newToken.getToken());
     }
 
 }

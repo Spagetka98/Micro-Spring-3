@@ -1,8 +1,10 @@
 package cz.spagetka.authenticationservice.model.enums;
 
 public enum ESchemalessData {
-    JWT("Jwt"),REFRESH_TOKEN("RefreshToken"),
-    VERIFICATION_TOKEN("VerificationToken"),PASSWORD_TOKEN("PasswordToken");
+    JWT("Jwt"),
+    REFRESH_TOKEN("RefreshToken"),
+    VERIFICATION_TOKEN("VerificationToken"),
+    PASSWORD_TOKEN("PasswordToken");
     private final String attributeName;
 
     public String getAttributeName() {

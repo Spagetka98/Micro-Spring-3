@@ -1,5 +1,7 @@
 server:
   port: 9001
+  servlet:
+    context-path: /api/auth
 
 eureka:
   client:
@@ -10,7 +12,7 @@ spring:
   data:
     mongodb:
       name: USER_DB
-      uri: mongodb+srv://AdminDB:Spagetka1@cluster0.u5rct18.mongodb.net/USER_DB?retryWrites=true&w=majority
+      uri: mongodb+srv://AdminDB:W39ZpY0PCDil2RJw@cluster0.u5rct18.mongodb.net/USER_DB?retryWrites=true&w=majority
   mail:
     host: smtp.gmail.com
     port: 587
@@ -34,44 +36,3 @@ token:
     cookie_name: "JWT"
     secret_key: "/zqoQPuHhmPtCLUbKMD1jJ8HzW1G2KXNRrkGKBACMRNFQOVLDU5bgC/LgmTdjk3V"
     secondsLength: 900
-
-validation:
-  username:
-    not_blank:
-      empty: "Username cannot be null or empty!"
-    size:
-      too_small: "The username must have more than 3 characters !"
-      too_long: "The username must have less than 30 characters !"
-    regexp:
-      not_match: |
-        Username requirements
-        Username consists of alphanumeric characters (a-zA-Z0-9), lowercase, or uppercase.
-        Username allowed of the dot (.), underscore (_), and hyphen (-).
-        The dot (.), underscore (_), or hyphen (-) must not be the first or last character.
-        The dot (.), underscore (_), or hyphen (-) does not appear consecutively, 
-        The number of characters must be between 3 to 30.
-  firstName:
-    size:
-      too_small: "The first name must have more than 2 characters !"
-    regexp:
-      not_match: "First name must have only letters!"
-  lastName:
-    size:
-      too_small: "The last name must have more than 2 characters !"
-    regexp:
-      not_match: "Last name must have only letters!"
-  email:
-    regexp:
-      not_match: "Email is not valid !"
-  password:
-    not_blank:
-      empty: "User password cannot be null or empty!"
-    size:
-      too_small: "The password must have more than 8 characters !"
-    regexp:
-      not_match: |
-        Password requirements
-        A digit must occur at least once
-        A lower case letter must occur at least once
-        An upper case letter must occur at least once
-        No whitespace allowed in the entire string

@@ -9,7 +9,7 @@ eureka:
 gateway-prop:
   cookieNameJWT: "JWT"
   excludedUrls: exc
-  validationURI: lb://AUTHENTICATION-SERVICE/secured/validation
+  validationURI: lb://AUTHENTICATION-SERVICE/v1/gateway/validation
 
 spring:
   cloud:
@@ -20,10 +20,10 @@ spring:
         - id: authentication-service
           uri: lb://authentication-service
           predicates:
-            - Path=/public/**,/secured/**
+            - Path=/api/auth/**
         - id: business-service
           uri: lb://business-service
           predicates:
-            - Path=/test/**
+            - Path=/api/news/**
           filters:
             - PreAuthFilter

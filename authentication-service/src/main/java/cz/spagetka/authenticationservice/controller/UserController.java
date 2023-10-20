@@ -11,7 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/secured/user")
+@RequestMapping("/v1/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -22,8 +22,8 @@ public class UserController {
         this.userService.logout(user);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE,cookieService.cleanJwtCookie().toString())
-                .header(HttpHeaders.SET_COOKIE,cookieService.cleanRefreshTokenCookie().toString())
+                .header(HttpHeaders.SET_COOKIE,this.cookieService.cleanJwtCookie().toString())
+                .header(HttpHeaders.SET_COOKIE,this.cookieService.cleanRefreshTokenCookie().toString())
                 .body(new MessageResponse("Logout was successful!"));
     }
 

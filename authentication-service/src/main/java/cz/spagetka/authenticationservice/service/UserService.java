@@ -20,15 +20,15 @@ public interface UserService {
 
     RefreshToken getNonExpiredUserRefreshToken(@NotNull(message = "Parameter user cannot be null!") User user)    ;
 
-    String renewUserJwtToken(@NotBlank(message = "Parameter refreshToken cannot be null or empty!") String refreshToken);
+    String renewJWT(@NotBlank(message = "Parameter refreshToken cannot be null or empty!") String refreshToken);
 
     void logout(@NotNull(message = "Parameter user cannot be null!") User user);
 
-    void userEmailVerification(@NotBlank(message =  "Parameter verificationToken cannot be null or empty!") String verificationToken);
+    void emailConfirmation(@NotBlank(message =  "Parameter verificationToken cannot be null or empty!") String verificationToken);
 
-    void sendResetRequest(@NotBlank(message =  "Parameter userEmail cannot be null or empty!") String userEmail);
+    void sendEmailForPasswordReset(@NotBlank(message =  "Parameter userEmail cannot be null or empty!") String userEmail);
 
-    void resetPasswordWithToken(
+    void resetPasswordViaToken(
             @NotBlank(message =  "Parameter passwordToken cannot be null or empty!")String passwordToken,
             @NotBlank(message =  "Parameter newPassword cannot be null or empty!")String newPassword);
 }

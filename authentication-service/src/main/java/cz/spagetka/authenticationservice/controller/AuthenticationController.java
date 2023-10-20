@@ -14,20 +14,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/public/auth")
+@RequestMapping("/public/v1/user")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final UserService userService;
     private final CookieService cookieService;
 
-    @PostMapping("/register")
+    @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(@Valid @RequestBody RegisterRequest request) {
+    public void register(@Valid @RequestBody RegisterRequest request) {
         this.userService.register(request);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginRequest request){
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request){
         LoginInformation loginInformation = this.userService.login(request);
 
         return ResponseEntity.ok()

@@ -64,7 +64,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             return true;
         }catch (SignatureException | MalformedJwtException | UnsupportedJwtException |
                 IllegalArgumentException e) {
-            throw new InvalidJwtException(String.format("Passed Jwt is not in valid state: %s", e.getMessage()));
+            throw new InvalidJwtException("Passed Jwt is not in valid state!", e);
         }
     }
 

@@ -40,23 +40,29 @@ public class User implements UserDetails {
             name = "username_unique_index",
             unique = true)
     @Size.List({
-            @Size(min = 3, message = "{validation.username.size.too_small}"),
-            @Size(max = 30, message = "{validation.username.size.too_long}")
+            @Size(min = 3, message = "The username must have more than 3 characters !"),
+            @Size(max = 30, message = "The username must have less than 30 characters !")
     })
     @Pattern(
             regexp = "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9])+[a-zA-Z0-9]$",
-            message = "{validation.username.regexp.not_match}"
+            message = "Username requirements\n" +
+                    "        Username consists of alphanumeric characters (a-zA-Z0-9), lowercase, or uppercase.\n" +
+                    "        Username allowed of the dot (.), underscore (_), and hyphen (-).\n" +
+                    "        The dot (.), underscore (_), or hyphen (-) must not be the first or last character.\n" +
+                    "        The dot (.), underscore (_), or hyphen (-) does not appear consecutively."
     )
+    @NotBlank(message = "Username cannot be null or empty!")
     private String username;
 
     @Field(
             name = "FirstName"
     )
-    @Size(min = 2, message = "{validation.firstName.size.too_small}")
+    @Size(min = 2, message = "The firstname must have more than 2 characters !")
     @Pattern(
             regexp = "^[A-ža-ž]+$",
-            message = "{validation.firstName.regexp.not_match}"
+            message = "First name must have only letters!"
     )
+    @NotBlank(message = "FirstName cannot be null or empty!")
     private String firstName;
 
     @Field(
@@ -64,25 +70,27 @@ public class User implements UserDetails {
             targetType = FieldType.STRING,
             order = 4
     )
-    @Size(min = 2, message = "{validation.lastName.size.too_small}")
+    @Size(min = 2, message = "The last name must have more than 2 characters !")
     @Pattern(
             regexp = "^[A-ža-ž]+$",
-            message = "{validation.lastName.regexp.not_match}"
+            message = "Last name must have only letters!"
     )
+    @NotBlank(message = "LastName cannot be null or empty!")
     private String lastName;
 
     @Field(
             name = "Email"
     )
     @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$",
-            message = "{validation.email.regexp.not_match}")
+            message = "Email is not valid !")
     @Indexed(name = "email_unique_index", unique = true)
+    @NotBlank(message = "Email cannot be null or empty!")
     private String email;
 
     @Field(
             name = "Password"
     )
-    @NotBlank(message = "{validation.password.not_blank.empty}")
+    @NotBlank(message = "The password cannot be null or empty!")
     private String password;
 
     @Field(
