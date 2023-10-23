@@ -1,5 +1,5 @@
 package cz.spagetka.newsService.model.enums;
 
 public enum ERole {
-    USER,EDITOR,ADMIN
+    ROLE_USER,ROLE_EDITOR,ROLE_ADMIN
 }

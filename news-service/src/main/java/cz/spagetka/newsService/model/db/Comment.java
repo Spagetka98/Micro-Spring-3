@@ -2,16 +2,14 @@ package cz.spagetka.newsService.model.db;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity(name = "Comment")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = {"version","author","news"})
 public class Comment {
     @Id
     @SequenceGenerator(

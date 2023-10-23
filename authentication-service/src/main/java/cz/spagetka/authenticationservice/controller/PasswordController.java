@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/public/v1/password")
+@RequestMapping("/public/password")
 @RequiredArgsConstructor
 public class PasswordController {
     private final UserService userService;

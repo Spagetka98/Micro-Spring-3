@@ -9,7 +9,7 @@ eureka:
 gateway-prop:
   cookieNameJWT: "JWT"
   excludedUrls: exc
-  validationURI: lb://AUTHENTICATION-SERVICE/v1/gateway/validation
+  validationURI: lb://AUTHENTICATION-SERVICE/api/auth/v1/gateway/validation
 
 spring:
   cloud:
@@ -21,8 +21,8 @@ spring:
           uri: lb://authentication-service
           predicates:
             - Path=/api/auth/**
-        - id: business-service
-          uri: lb://business-service
+        - id: news-service
+          uri: lb://news-service
           predicates:
             - Path=/api/news/**
           filters:

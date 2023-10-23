@@ -7,6 +7,7 @@ import cz.spagetka.newsService.model.request.NewsRequest;
 import cz.spagetka.newsService.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -17,13 +18,13 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
 
     @Override
-    public void createNews(NewsRequest newsRequest, UserInformation userInfo) {
+    public void createNews(NewsRequest newsRequest,MultipartFile thumbnail, UserInformation userInfo) {
         User author = this.userService.getUser(userInfo.getUserId());
 
         try {
             News news = News.builder()
                     .title(newsRequest.title())
-                    .thumbnail(newsRequest.thumbnail().getBytes())
+                    .thumbnail(thumbnail.getBytes())
                     .text(newsRequest.text())
                     .creator(author)
                     .build();

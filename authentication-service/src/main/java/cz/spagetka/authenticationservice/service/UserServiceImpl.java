@@ -6,7 +6,6 @@ import cz.spagetka.authenticationservice.exception.passwordToken.MissingPassword
 import cz.spagetka.authenticationservice.exception.passwordToken.PasswordTokenExpirationException;
 import cz.spagetka.authenticationservice.exception.refreshToken.InvalidRefreshTokenException;
 import cz.spagetka.authenticationservice.exception.refreshToken.RefreshTokenExpirationException;
-import cz.spagetka.authenticationservice.exception.user.IncorrectPasswordException;
 import cz.spagetka.authenticationservice.exception.user.UserInformationTaken;
 import cz.spagetka.authenticationservice.exception.user.UserNotFoundException;
 import cz.spagetka.authenticationservice.exception.verificationToken.MissingVerificationTokenException;
@@ -175,7 +174,7 @@ public class UserServiceImpl implements UserService {
                 .lastName(request.lastName())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .role(ERole.USER)
+                .role(ERole.ROLE_USER)
                 .isAccountNonExpired(true)
                 .isAccountNonLocked(true)
                 .isCredentialsNonExpired(true)

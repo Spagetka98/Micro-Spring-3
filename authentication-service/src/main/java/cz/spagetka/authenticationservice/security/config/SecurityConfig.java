@@ -1,7 +1,6 @@
 package cz.spagetka.authenticationservice.security.config;
 
 import cz.spagetka.authenticationservice.properties.JwtProperties;
-import cz.spagetka.authenticationservice.properties.ServiceProperties;
 import cz.spagetka.authenticationservice.repository.UserRepository;
 import cz.spagetka.authenticationservice.security.filter.ExceptionFilter;
 import cz.spagetka.authenticationservice.security.filter.JwtFilter;
@@ -34,7 +33,6 @@ public class SecurityConfig {
     private final JwtTokenService jwtTokenServiceImpl;
     private final UserRepository userRepository;
     private final JwtProperties jwtProperties;
-    private final ServiceProperties serviceProperties;
     private final HandlerExceptionResolver handlerExceptionResolver;
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
@@ -58,8 +56,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain publicFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher(serviceProperties.contextPath() + "/public/**")
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .securityMatcher("/public/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
@@ -69,8 +66,7 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain privateFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher(serviceProperties.contextPath() + "/**")
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .securityMatcher("/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))

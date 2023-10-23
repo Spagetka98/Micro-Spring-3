@@ -3,10 +3,7 @@ package cz.spagetka.newsService.model.db;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -15,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = {"thumbnail", "version","creator","comments"})
 public class News {
     @Id
     @SequenceGenerator(
@@ -41,7 +39,8 @@ public class News {
     private String title;
 
     @Lob
-    @Column(name="thumbnail_img")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(length=16777215)
     private byte[] thumbnail;
 
     @Column(name = "text",nullable = false, length = 512)

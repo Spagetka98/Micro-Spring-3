@@ -3,7 +3,6 @@ package cz.spagetka.authenticationservice;
 import cz.spagetka.authenticationservice.properties.JwtProperties;
 import cz.spagetka.authenticationservice.properties.MongoProperties;
 import cz.spagetka.authenticationservice.properties.RefreshTokenProperties;
-import cz.spagetka.authenticationservice.properties.ServiceProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -12,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableConfigurationProperties({JwtProperties.class, MongoProperties.class, RefreshTokenProperties.class, ServiceProperties.class})
+@EnableConfigurationProperties({JwtProperties.class, MongoProperties.class, RefreshTokenProperties.class})
 @EnableScheduling
 public class AuthenticationServiceApplication {
 

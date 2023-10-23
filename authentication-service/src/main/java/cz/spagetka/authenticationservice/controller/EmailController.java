@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/public/v1/email")
+@RequestMapping("/public/email")
 @RequiredArgsConstructor
 public class EmailController {
     private final UserService userService;

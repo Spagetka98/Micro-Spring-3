@@ -32,7 +32,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain publicFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/public/**")
+                .securityMatcher( "/public/**")
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -43,7 +43,7 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain privateFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/**")
+                .securityMatcher( "/**")
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

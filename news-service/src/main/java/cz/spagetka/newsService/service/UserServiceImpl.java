@@ -13,7 +13,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User getUser(String authId) {
         return this.userRepository.findByAuthId(authId)
-                .orElse(this.createUser(authId));
+                .orElseGet(()->this.createUser(authId));
     }
 
     private User createUser(String authId){

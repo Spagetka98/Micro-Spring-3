@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/public/v1/user")
+@RequestMapping("/public/user")
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final UserService userService;
