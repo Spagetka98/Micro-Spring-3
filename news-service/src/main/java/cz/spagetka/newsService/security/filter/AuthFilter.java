@@ -2,7 +2,7 @@ package cz.spagetka.newsService.security.filter;
 
 import cz.spagetka.newsService.exception.IllegalRequestInputException;
 import cz.spagetka.newsService.exception.IllegalUserRoleException;
-import cz.spagetka.newsService.model.dto.UserInformation;
+import cz.spagetka.newsService.model.dto.UserDTO;
 import cz.spagetka.newsService.model.enums.EHeaders;
 import cz.spagetka.newsService.model.enums.ERole;
 import jakarta.servlet.FilterChain;
@@ -21,9 +21,9 @@ import java.io.IOException;
 public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        UserInformation userInformation = this.getUserData(request);
+        UserDTO userDTO = this.getUserData(request);
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInformation, null, userInformation.getAuthorities());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDTO, null, userDTO.getAuthorities());
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -32,7 +32,7 @@ public class AuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private UserInformation getUserData(HttpServletRequest request) {
+    private UserDTO getUserData(HttpServletRequest request) {
         try {
             String userId = request.getHeader(EHeaders.USER_ID.getValue());;
             String username = request.getHeader(EHeaders.USERNAME.getValue());
@@ -45,7 +45,7 @@ public class AuthFilter extends OncePerRequestFilter {
             boolean isCredentialsNonExpired = Boolean.parseBoolean(request.getHeader(EHeaders.IS_CREDENTIALS_NON_EXPIRED.getValue()));
             boolean isEnabled = Boolean.parseBoolean(request.getHeader(EHeaders.IS_ENABLED.getValue()));
 
-            return new UserInformation(
+            return new UserDTO(
                     userId, username, email,
                     userRole,
                     isAccountNonExpired, isAccountNonLocked, isCredentialsNonExpired, isEnabled

@@ -1,5 +1,6 @@
 package cz.spagetka.newsService.model.db;
 
+import cz.spagetka.newsService.model.db.common.BasicEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -7,13 +8,15 @@ import lombok.*;
 
 import java.util.List;
 
+
 @Entity(name = "news")
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString(exclude = {"thumbnail", "version","creator","comments"})
-public class News {
+public class News extends BasicEntity {
     @Id
     @SequenceGenerator(
             name = "newsId_sequence_generator",
@@ -50,7 +53,6 @@ public class News {
     private Long version;
 
     @ManyToOne(
-            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             optional = false
     )

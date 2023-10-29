@@ -14,7 +14,7 @@ import java.util.Collections;
 
 @Getter
 @RequiredArgsConstructor
-public class UserInformation implements UserDetails {
+public class UserDTO implements UserDetails {
     @NotBlank
     private final String userId;
     @NotBlank

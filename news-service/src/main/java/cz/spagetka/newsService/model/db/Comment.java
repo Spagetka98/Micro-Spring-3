@@ -1,16 +1,19 @@
 package cz.spagetka.newsService.model.db;
 
+import cz.spagetka.newsService.model.db.common.BasicEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+
 @Entity(name = "Comment")
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString(exclude = {"version","author","news"})
-public class Comment {
+public class Comment extends BasicEntity {
     @Id
     @SequenceGenerator(
             name = "commentId_sequence_generator",
@@ -35,7 +38,6 @@ public class Comment {
     private Long version;
 
     @ManyToOne(
-            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             optional = false
     )
@@ -46,7 +48,6 @@ public class Comment {
     private User author;
 
     @ManyToOne(
-            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             optional = false
     )

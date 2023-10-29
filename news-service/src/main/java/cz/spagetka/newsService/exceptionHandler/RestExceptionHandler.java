@@ -1,5 +1,8 @@
 package cz.spagetka.newsService.exceptionHandler;
 
+import cz.spagetka.newsService.exception.CommentNotFoundException;
+import cz.spagetka.newsService.exception.NewsNotFoundException;
+import cz.spagetka.newsService.exception.UserNotFoundException;
 import cz.spagetka.newsService.model.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -14,7 +17,7 @@ import java.time.Instant;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler({ConstraintViolationException.class})
+    @ExceptionHandler({ConstraintViolationException.class, NewsNotFoundException.class, UserNotFoundException.class, CommentNotFoundException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse badRequestException(Exception exception, WebRequest request) {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), Instant.now().toString());

@@ -1,21 +1,24 @@
 package cz.spagetka.newsService.model.db;
 
+import cz.spagetka.newsService.model.db.common.BasicEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
 
+
 @Entity(name = "user")
 @Table(indexes = {
         @Index(name = "idx_auth_id",columnList = "auth_id",unique = true)
 })
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString(exclude = {"version", "comments","news"})
-public class User {
+public class User extends BasicEntity {
     @Id
     @SequenceGenerator(
             name = "userId_sequence_generator",
