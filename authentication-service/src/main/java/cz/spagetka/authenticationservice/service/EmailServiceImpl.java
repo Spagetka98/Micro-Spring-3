@@ -24,7 +24,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendUserVerificationEmail(String userEmail,String userVerificationToken) {
         final String SUBJECT = "Potvrzení emailu!";
-        final String TEXT = String.format("Potvrzení provedete zde: http://localhost:4200/verification/%s",userVerificationToken);
+        final String TEXT = String.format("Potvrzení provedete zde: http://localhost:4200/email-verification/%s",userVerificationToken);
 
         this.sendEmail(SUBJECT,userEmail,TEXT);
     }
@@ -32,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendPasswordResetEmail(String userEmail, String passwordToken) {
         final String SUBJECT = "Reset hesla!";
-        final String TEXT = String.format("Reset hesla provedete zde: http://localhost:4200/resetPassword/%s",passwordToken);
+        final String TEXT = String.format("Reset hesla provedete zde: http://localhost:4200/password/reset/%s",passwordToken);
 
         this.sendEmail(SUBJECT,userEmail,TEXT);
     }
