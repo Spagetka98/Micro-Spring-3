@@ -1,9 +1,9 @@
 package cz.spagetka.authenticationservice.controller;
 
-import cz.spagetka.authenticationservice.model.dto.LoginInformation;
+import cz.spagetka.authenticationservice.model.document.User;
+import cz.spagetka.authenticationservice.model.dto.UserDTO;
 import cz.spagetka.authenticationservice.model.request.LoginRequest;
 import cz.spagetka.authenticationservice.model.request.RegisterRequest;
-import cz.spagetka.authenticationservice.model.response.LoginResponse;
 import cz.spagetka.authenticationservice.service.CookieService;
 import cz.spagetka.authenticationservice.service.UserService;
 import jakarta.validation.Valid;
@@ -27,12 +27,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request){
-        LoginInformation loginInformation = this.userService.login(request);
+    public ResponseEntity<UserDTO> login(@Valid @RequestBody LoginRequest request) {
+        User user = this.userService.login(request);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookieService.getJwtCookie(loginInformation.jwtToken()).toString())
-                .header(HttpHeaders.SET_COOKIE, cookieService.getJwRefreshTokenCookie(loginInformation.refreshToken()).toString())
-                .body(new LoginResponse(loginInformation.userId(),loginInformation.username(), loginInformation.email(), loginInformation.role()));
+                .header(HttpHeaders.SET_COOKIE, cookieService.getJwtCookie(user.getJWT().get()).toString())
+                .header(HttpHeaders.SET_COOKIE, cookieService.getJwRefreshTokenCookie(user.getRefreshToken().get()).toString())
+                .body(new UserDTO(user.getUserId().toString(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole()));
     }
 }

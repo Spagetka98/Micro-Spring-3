@@ -1,6 +1,7 @@
 package cz.spagetka.authenticationservice.controller;
 
 import cz.spagetka.authenticationservice.model.document.User;
+import cz.spagetka.authenticationservice.model.dto.UserDTO;
 import cz.spagetka.authenticationservice.model.response.MessageResponse;
 import cz.spagetka.authenticationservice.service.CookieService;
 import cz.spagetka.authenticationservice.service.UserService;
@@ -16,6 +17,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final CookieService cookieService;
+
+    @GetMapping()
+    public UserDTO getUserDetails(@RequestParam(name = "id") String userId){
+        User user = this.userService.findUser(userId);
+
+        return new UserDTO(user.getUserId().toString(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getEmail(),user.getRole());
+    }
 
     @GetMapping("/logout")
     public ResponseEntity<MessageResponse> logout(@AuthenticationPrincipal User user){

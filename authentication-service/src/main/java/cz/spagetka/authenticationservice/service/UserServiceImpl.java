@@ -13,7 +13,6 @@ import cz.spagetka.authenticationservice.exception.verificationToken.Verificatio
 import cz.spagetka.authenticationservice.model.document.embedded.PasswordToken;
 import cz.spagetka.authenticationservice.model.document.embedded.RefreshToken;
 import cz.spagetka.authenticationservice.model.document.embedded.VerificationToken;
-import cz.spagetka.authenticationservice.model.dto.LoginInformation;
 import cz.spagetka.authenticationservice.model.request.LoginRequest;
 import cz.spagetka.authenticationservice.model.request.RegisterRequest;
 import cz.spagetka.authenticationservice.model.document.User;
@@ -59,17 +58,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public LoginInformation login(LoginRequest request) {
+    public User login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
 
-        User loggedUser = (User) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
 
-        String jwtToken = this.getNonExpiredUserJwtToken(loggedUser);
+        this.getNonExpiredUserJwtToken(user);
 
-        RefreshToken refreshToken = this.getNonExpiredUserRefreshToken(loggedUser);
+        this.getNonExpiredUserRefreshToken(user);
 
-        return new LoginInformation(loggedUser.getUserId().toString(), loggedUser.getUsername(), loggedUser.getEmail(), loggedUser.getRole(), jwtToken, refreshToken);
+        return user;
     }
 
     @Override
@@ -123,6 +122,12 @@ public class UserServiceImpl implements UserService {
         user.removePasswordToken();
 
         this.userRepository.save(user);
+    }
+
+    @Override
+    public User findUser(String userId) {
+        return this.userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with id: %s was not found in database!",userId)));
     }
 
     @Override
