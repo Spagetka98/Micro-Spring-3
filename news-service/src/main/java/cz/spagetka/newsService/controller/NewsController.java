@@ -25,11 +25,9 @@ public class NewsController {
     public Page<NewsDTO> getAllNews(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
+            @AuthenticationPrincipal UserDTO userDTO,
             HttpServletRequest request){
-        return this.newsService.findNews(page,size)
-                .map(news -> new NewsDTO(
-                        news.getId(), news.getTitle(), String.format("%s/img/%d",request.getRequestURI(), news.getId()),
-                        news.getText(), news.getCreator().getAuthId(),news.getCreatedAt().toString(),news.getUpdatedAt().toString()));
+        return this.newsService.findNews(page,size,userDTO,request.getRequestURI());
     }
 
     @GetMapping(value = "/img/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
@@ -44,4 +42,29 @@ public class NewsController {
         this.newsService.createNews(newsRequest,thumbnail, userDTO);
     }
 
+    @DeleteMapping
+    @PreAuthorize("hasRole('ROLE_EDITOR') or hasRole('ROLE_ADMIN')")
+    public void deleteNews(@RequestParam(name = "id") long newsId){
+        this.newsService.deleteNews(newsId);
+    }
+
+    @PutMapping("/{id}/add-like")
+    public void addLike(@PathVariable(name = "id") long newsId, @AuthenticationPrincipal UserDTO userDTO){
+        this.newsService.addLike(newsId,userDTO);
+    }
+
+    @PutMapping("/{id}/remove-like")
+    public void removeLike(@PathVariable(name = "id") long newsId, @AuthenticationPrincipal UserDTO userDTO){
+        this.newsService.removeLike(newsId,userDTO);
+    }
+
+    @PutMapping("/{id}/add-dislike")
+    public void addDislike(@PathVariable(name = "id") long newsId, @AuthenticationPrincipal UserDTO userDTO){
+        this.newsService.addDislike(newsId,userDTO);
+    }
+
+    @PutMapping("/{id}/remove-dislike")
+    public void removeDislike(@PathVariable(name = "id") long newsId, @AuthenticationPrincipal UserDTO userDTO){
+        this.newsService.removeDislike(newsId,userDTO);
+    }
 }

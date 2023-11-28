@@ -8,34 +8,15 @@ import lombok.*;
 
 @Entity(name = "Comment")
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"version","author","news"})
+@ToString(exclude = {"author","news"})
+@SequenceGenerator(name = "BASIC_SEQ_GENERATOR", sequenceName = "COMMENT_SEQ", allocationSize = 1)
 public class Comment extends BasicEntity {
-    @Id
-    @SequenceGenerator(
-            name = "commentId_sequence_generator",
-            sequenceName = "commentId_sequence_generator",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "commentId_sequence_generator"
-    )
-    @Column(
-            name = "id",
-            updatable = false
-    )
-    private long id;
-
     @Column(name = "text",nullable = false)
     @NotBlank
     private String text;
-
-    @Version
-    private Long version;
 
     @ManyToOne(
             fetch = FetchType.LAZY,
@@ -56,4 +37,16 @@ public class Comment extends BasicEntity {
             referencedColumnName = "id"
     )
     private News news;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Comment )) return false;
+        return super.getId() == (((Comment) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -7,6 +7,10 @@ public record NewsDTO(
         String text,
         String userId,
         String creationDate,
-        String updateDate
+        String updateDate,
+        long totalLikes,
+        long totalDislikes,
+        boolean isLikedByUser,
+        boolean isDislikedByUser
 ) {
 }

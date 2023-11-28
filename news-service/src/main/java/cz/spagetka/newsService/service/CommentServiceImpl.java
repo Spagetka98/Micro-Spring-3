@@ -41,9 +41,10 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = Comment.builder()
                 .text(commentRequest.text())
-                .author(commentAuthor)
-                .news(commentedNews)
                 .build();
+
+        commentAuthor.addComment(comment);
+        commentedNews.addComment(comment);
 
         this.commentRepository.save(comment);
     }
@@ -64,6 +65,9 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(long newsId, UserDTO userDTO) {
         Comment comment = this.commentRepository.findByNews_IdAndAuthor_AuthId(newsId, userDTO.getUserId())
                 .orElseThrow(() -> new CommentNotFoundException(String.format("Could not find comment with newsId: %d and authorId: %s",newsId,userDTO.getUserId())));
+
+        comment.getNews().removeComment(comment);
+        comment.getAuthor().removeComment(comment);
 
         this.commentRepository.delete(comment);
     }
