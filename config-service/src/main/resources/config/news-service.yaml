@@ -6,6 +6,10 @@ server:
     max-file-size: 3MB
     max-request-size: 4MB
 
+eureka:
+  instance:
+    prefer-ip-address: true
+
 spring:
   jpa:
     hibernate:
