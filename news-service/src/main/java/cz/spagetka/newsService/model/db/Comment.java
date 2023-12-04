@@ -10,6 +10,9 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(indexes = {
+        @Index(name = "idx_author_news",columnList = "author_id,news_id",unique = true)
+})
 @Builder
 @ToString(exclude = {"author","news"})
 @SequenceGenerator(name = "BASIC_SEQ_GENERATOR", sequenceName = "COMMENT_SEQ", allocationSize = 1)

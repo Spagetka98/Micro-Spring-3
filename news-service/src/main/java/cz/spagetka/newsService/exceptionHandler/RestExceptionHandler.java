@@ -13,13 +13,14 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.Instant;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
 
     @ExceptionHandler({ConstraintViolationException.class, NewsNotFoundException.class, UserNotFoundException.class, CommentNotFoundException.class,
-            MissingServletRequestPartException.class})
+            MissingServletRequestPartException.class, SQLIntegrityConstraintViolationException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse badRequestException(Exception exception, WebRequest request) {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), Instant.now().toString());

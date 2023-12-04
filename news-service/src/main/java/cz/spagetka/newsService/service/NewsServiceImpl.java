@@ -62,6 +62,17 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    public NewsDTO findNews(long id, UserDTO userDTO) {
+        News news = this.findNews(id);
+        User user = this.userService.getUser(userDTO.getUserId());
+
+        return new NewsDTO(
+                news.getId(), news.getTitle(),
+                news.getText(), news.getCreator().getAuthId(),news.getCreatedAt().toString(),news.getUpdatedAt().toString(),
+                news.getLikedByUsers().size(),news.getDislikedByUsers().size(),news.getComments().size(),news.getLikedByUsers().contains(user),news.getDislikedByUsers().contains(user));
+    }
+
+    @Override
     public Page<News> findNews(int page, int size) {
         Pageable paging = PageRequest.of(page, size);
 
@@ -69,14 +80,13 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public Page<NewsDTO> findNews(int page, int size, UserDTO userDTO, String requestURI) {
+    public Page<NewsDTO> findNews(int page, int size, UserDTO userDTO) {
         User user = this.userService.getUser(userDTO.getUserId());
 
         return this.findNews(page,size)
                 .map(news -> new NewsDTO(
-                        news.getId(), news.getTitle(), String.format("%s/img/%d",requestURI, news.getId()),
-                        news.getText(), news.getCreator().getAuthId(),news.getCreatedAt().toString(),news.getUpdatedAt().toString(),
-                        news.getLikedByUsers().size(),news.getDislikedByUsers().size(),news.getLikedByUsers().contains(user),news.getDislikedByUsers().contains(user)));
+                        news.getId(), news.getTitle(), news.getText(), news.getCreator().getAuthId(),news.getCreatedAt().toString(), news.getUpdatedAt().toString(),
+                        news.getLikedByUsers().size(),news.getDislikedByUsers().size(),news.getComments().size(),news.getLikedByUsers().contains(user),news.getDislikedByUsers().contains(user)));
     }
 
     @Override

@@ -21,13 +21,20 @@ import org.springframework.web.multipart.MultipartFile;
 public class NewsController {
     private final NewsService newsService;
 
+    @GetMapping("/{id}")
+    public NewsDTO getNews(
+            @PathVariable(name = "id") long newsId,
+            @AuthenticationPrincipal UserDTO userDTO){
+
+        return this.newsService.findNews(newsId,userDTO);
+    }
+
     @GetMapping
     public Page<NewsDTO> getAllNews(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
-            @AuthenticationPrincipal UserDTO userDTO,
-            HttpServletRequest request){
-        return this.newsService.findNews(page,size,userDTO,request.getRequestURI());
+            @AuthenticationPrincipal UserDTO userDTO){
+        return this.newsService.findNews(page,size,userDTO);
     }
 
     @GetMapping(value = "/img/{id}",produces = MediaType.IMAGE_JPEG_VALUE)

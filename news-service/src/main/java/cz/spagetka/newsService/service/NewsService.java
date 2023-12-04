@@ -20,6 +20,7 @@ public interface NewsService {
     void addDislike(long id,@NotNull UserDTO userDTO);
     void removeDislike(long id,@NotNull UserDTO userDTO);
     News findNews(long id);
+    NewsDTO findNews(long id, @NotNull UserDTO userDTO);
     Page<News> findNews(int page, int size);
-    Page<NewsDTO> findNews(int page, int size, @NotNull UserDTO userDTO, @NotBlank String requestURI);
+    Page<NewsDTO> findNews(int page, int size, @NotNull UserDTO userDTO);
 }
