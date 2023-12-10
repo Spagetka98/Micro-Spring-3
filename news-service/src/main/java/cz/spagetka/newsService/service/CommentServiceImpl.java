@@ -3,9 +3,11 @@ package cz.spagetka.newsService.service;
 import cz.spagetka.newsService.exception.CommentNotFoundException;
 import cz.spagetka.newsService.exception.NewsNotFoundException;
 import cz.spagetka.newsService.exception.UserNotFoundException;
+import cz.spagetka.newsService.mapper.CommentMapper;
 import cz.spagetka.newsService.model.db.Comment;
 import cz.spagetka.newsService.model.db.News;
 import cz.spagetka.newsService.model.db.User;
+import cz.spagetka.newsService.model.dto.CommentDTO;
 import cz.spagetka.newsService.model.dto.UserDTO;
 import cz.spagetka.newsService.model.request.CommentRequest;
 import cz.spagetka.newsService.repository.CommentRepository;
@@ -23,12 +25,14 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
+    private final CommentMapper commentMapper;
 
     @Override
-    public Page<Comment> findComments(long newsId, int page, int size) {
+    public Page<CommentDTO> getCommentsDTO(long newsId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
-        return this.commentRepository.findAllByNews_IdOrderByCreatedAtDesc(newsId,pageable);
+        return this.commentRepository.findAllByNews_IdOrderByCreatedAtDesc(newsId,pageable)
+                .map(commentMapper::toDTO);
     }
 
     @Override

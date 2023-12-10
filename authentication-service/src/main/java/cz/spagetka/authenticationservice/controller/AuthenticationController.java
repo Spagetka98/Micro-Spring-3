@@ -1,5 +1,6 @@
 package cz.spagetka.authenticationservice.controller;
 
+import cz.spagetka.authenticationservice.mapper.UserMapper;
 import cz.spagetka.authenticationservice.model.document.User;
 import cz.spagetka.authenticationservice.model.dto.UserDTO;
 import cz.spagetka.authenticationservice.model.request.LoginRequest;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final UserService userService;
     private final CookieService cookieService;
+    private final UserMapper userMapper;
 
     @PostMapping("/registration")
     @ResponseStatus(HttpStatus.CREATED)
@@ -33,6 +35,6 @@ public class AuthenticationController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookieService.getJwtCookie(user.getJWT().get()).toString())
                 .header(HttpHeaders.SET_COOKIE, cookieService.getJwRefreshTokenCookie(user.getRefreshToken().get()).toString())
-                .body(new UserDTO(user.getUserId().toString(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRole()));
+                .body(userMapper.toDTO(user));
     }
 }

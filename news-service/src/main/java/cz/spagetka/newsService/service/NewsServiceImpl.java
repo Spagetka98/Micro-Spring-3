@@ -1,6 +1,7 @@
 package cz.spagetka.newsService.service;
 
 import cz.spagetka.newsService.exception.NewsNotFoundException;
+import cz.spagetka.newsService.mapper.NewsMapper;
 import cz.spagetka.newsService.model.db.News;
 import cz.spagetka.newsService.model.db.User;
 import cz.spagetka.newsService.model.dto.NewsDTO;
@@ -24,6 +25,7 @@ import java.io.IOException;
 public class NewsServiceImpl implements NewsService {
     private final UserService userService;
     private final NewsRepository newsRepository;
+    private final NewsMapper newsMapper;
 
     @Override
     public void createNews(NewsRequest newsRequest,MultipartFile thumbnail, UserDTO userInfo) {
@@ -66,11 +68,9 @@ public class NewsServiceImpl implements NewsService {
         News news = this.findNews(id);
         User user = this.userService.getUser(userDTO.getUserId());
 
-        return new NewsDTO(
-                news.getId(), news.getTitle(),
-                news.getText(), news.getCreator().getAuthId(),news.getCreatedAt().toString(),news.getUpdatedAt().toString(),
-                news.getLikedByUsers().size(),news.getDislikedByUsers().size(),news.getComments().size(),news.getLikedByUsers().contains(user),news.getDislikedByUsers().contains(user));
+        return newsMapper.toDTO(news,user);
     }
+
 
     @Override
     public Page<News> findNews(int page, int size) {
@@ -84,9 +84,7 @@ public class NewsServiceImpl implements NewsService {
         User user = this.userService.getUser(userDTO.getUserId());
 
         return this.findNews(page,size)
-                .map(news -> new NewsDTO(
-                        news.getId(), news.getTitle(), news.getText(), news.getCreator().getAuthId(),news.getCreatedAt().toString(), news.getUpdatedAt().toString(),
-                        news.getLikedByUsers().size(),news.getDislikedByUsers().size(),news.getComments().size(),news.getLikedByUsers().contains(user),news.getDislikedByUsers().contains(user)));
+                .map(news -> newsMapper.toDTO(news,user));
     }
 
     @Override

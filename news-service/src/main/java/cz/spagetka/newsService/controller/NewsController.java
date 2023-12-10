@@ -37,7 +37,7 @@ public class NewsController {
         return this.newsService.findNews(page,size,userDTO);
     }
 
-    @GetMapping(value = "/img/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/img/{id}.jpg",produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getThumbnail(@PathVariable long id) {
         return this.newsService.findNews(id).getThumbnail();
     }

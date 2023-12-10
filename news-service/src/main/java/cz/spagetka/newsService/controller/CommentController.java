@@ -22,8 +22,7 @@ public class CommentController {
             @PathVariable(name = "id") long newsId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size){
-        return this.commentService.findComments(newsId,page,size)
-                .map((comment) -> new CommentDTO(comment.getId(),comment.getText(),comment.getAuthor().getAuthId(),comment.getCreatedAt().toString(),comment.getUpdatedAt().toString()));
+        return this.commentService.getCommentsDTO(newsId,page,size);
     }
 
     @PostMapping("/{id}/comment")

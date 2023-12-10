@@ -34,7 +34,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
     private UserDTO getUserData(HttpServletRequest request) {
         try {
-            String userId = request.getHeader(EHeaders.USER_ID.getValue());;
+            String userId = request.getHeader(EHeaders.USER_ID.getValue());
             String username = request.getHeader(EHeaders.USERNAME.getValue());
             String email = request.getHeader(EHeaders.EMAIL.getValue());
 
