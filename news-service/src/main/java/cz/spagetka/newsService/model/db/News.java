@@ -4,6 +4,7 @@ import cz.spagetka.newsService.model.db.common.BasicEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -26,6 +27,10 @@ public class News extends BasicEntity {
             length = 50
     )
     @Size(min = 3,max = 50,message = "Title can be between 3 to 50 chars!")
+    @Pattern(
+            regexp = "^[A-ža-ž!? ]+$",
+            message = "Title must have only letters!"
+    )
     @NotBlank
     private String title;
 

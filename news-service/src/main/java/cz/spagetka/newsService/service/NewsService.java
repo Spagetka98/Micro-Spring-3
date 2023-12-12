@@ -5,7 +5,6 @@ import cz.spagetka.newsService.model.dto.NewsDTO;
 import cz.spagetka.newsService.model.dto.UserDTO;
 import cz.spagetka.newsService.model.request.NewsRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
@@ -22,5 +21,5 @@ public interface NewsService {
     News findNews(long id);
     NewsDTO findNews(long id, @NotNull UserDTO userDTO);
     Page<News> findNews(int page, int size);
-    Page<NewsDTO> findNews(int page, int size, @NotNull UserDTO userDTO);
+    Page<NewsDTO> findNews(int page, int size, String search, @NotNull UserDTO userDTO);
 }

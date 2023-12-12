@@ -12,7 +12,7 @@ public record NewsRequest(
                 @Size(max = 30, message = "The username must have less than 30 characters !")
         })
         @Pattern(
-                regexp = "^[A-ža-ž]+$",
+                regexp = "^[A-ža-ž!? ]+$",
                 message = "Title must have only letters!"
         )
         String title,

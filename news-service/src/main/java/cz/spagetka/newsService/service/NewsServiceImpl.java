@@ -33,9 +33,9 @@ public class NewsServiceImpl implements NewsService {
 
         try {
             News news = News.builder()
-                    .title(newsRequest.title())
+                    .title(newsRequest.title().trim())
                     .thumbnail(thumbnail.getBytes())
-                    .text(newsRequest.text())
+                    .text(newsRequest.text().trim())
                     .creator(author)
                     .build();
 
@@ -76,14 +76,15 @@ public class NewsServiceImpl implements NewsService {
     public Page<News> findNews(int page, int size) {
         Pageable paging = PageRequest.of(page, size);
 
-        return this.newsRepository.findAllByOrderByCreatedAtDesc(paging);
+        return this.newsRepository.findNewsByTitleOrAuthorId(null,paging);
     }
 
     @Override
-    public Page<NewsDTO> findNews(int page, int size, UserDTO userDTO) {
+    public Page<NewsDTO> findNews(int page, int size, String search, UserDTO userDTO) {
+        Pageable paging = PageRequest.of(page, size);
         User user = this.userService.getUser(userDTO.getUserId());
 
-        return this.findNews(page,size)
+        return this.newsRepository.findNewsByTitleOrAuthorId(search,paging)
                 .map(news -> newsMapper.toDTO(news,user));
     }
 

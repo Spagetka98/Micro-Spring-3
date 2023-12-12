@@ -33,8 +33,9 @@ public class NewsController {
     public Page<NewsDTO> getAllNews(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) String search,
             @AuthenticationPrincipal UserDTO userDTO){
-        return this.newsService.findNews(page,size,userDTO);
+        return this.newsService.findNews(page,size,search,userDTO);
     }
 
     @GetMapping(value = "/img/{id}.jpg",produces = MediaType.IMAGE_JPEG_VALUE)
