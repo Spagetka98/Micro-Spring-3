@@ -9,6 +9,7 @@ import cz.spagetka.newsService.model.dto.UserDTO;
 import cz.spagetka.newsService.model.request.NewsRequest;
 import cz.spagetka.newsService.repository.NewsRepository;
 import jakarta.persistence.OptimisticLockException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -93,15 +96,10 @@ public class NewsServiceImpl implements NewsService {
             maxAttempts = 4,
             backoff = @Backoff(delay = 1000))
     public void addLike(long id, UserDTO userDTO) {
-        News news = this.newsRepository.findById(id)
-                .orElseThrow(() -> new NewsNotFoundException(String.format("Could not find a News with id: %d",id)));
-
-        User user = this.userService.getUser(userDTO.getUserId());
-
-        news.removeDislikedUser(user);
-        news.addLikedUser(user);
-
-        this.newsRepository.save(news);
+        this.userInteraction(id,userDTO,(news,user) -> {
+            news.removeDislikedUser(user);
+            news.addLikedUser(user);
+        });
     }
 
     @Override
@@ -109,14 +107,7 @@ public class NewsServiceImpl implements NewsService {
             maxAttempts = 4,
             backoff = @Backoff(delay = 1000))
     public void removeLike(long id, UserDTO userDTO) {
-        News news = this.newsRepository.findById(id)
-                .orElseThrow(() -> new NewsNotFoundException(String.format("Could not find a News with id: %d",id)));
-
-        User user = this.userService.getUser(userDTO.getUserId());
-
-        news.removeLikedUser(user);
-
-        this.newsRepository.save(news);
+        this.userInteraction(id,userDTO, News::removeLikedUser);
     }
 
     @Override
@@ -124,15 +115,10 @@ public class NewsServiceImpl implements NewsService {
             maxAttempts = 4,
             backoff = @Backoff(delay = 1000))
     public void addDislike(long id, UserDTO userDTO) {
-        News news = this.newsRepository.findById(id)
-                .orElseThrow(() -> new NewsNotFoundException(String.format("Could not find a News with id: %d",id)));
-
-        User user = this.userService.getUser(userDTO.getUserId());
-
-        news.removeLikedUser(user);
-        news.addDislikedUser(user);
-
-        this.newsRepository.save(news);
+        this.userInteraction(id,userDTO,(news,user) -> {
+            news.removeLikedUser(user);
+            news.addDislikedUser(user);
+        });
     }
 
     @Override
@@ -140,12 +126,16 @@ public class NewsServiceImpl implements NewsService {
             maxAttempts = 4,
             backoff = @Backoff(delay = 1000))
     public void removeDislike(long id, UserDTO userDTO) {
+        this.userInteraction(id,userDTO, News::removeDislikedUser);
+    }
+
+    private void userInteraction(long id, @NotNull UserDTO userDTO, @NotNull BiConsumer<News,User> action){
         News news = this.newsRepository.findById(id)
                 .orElseThrow(() -> new NewsNotFoundException(String.format("Could not find a News with id: %d",id)));
 
         User user = this.userService.getUser(userDTO.getUserId());
 
-        news.removeDislikedUser(user);
+        action.accept(news,user);
 
         this.newsRepository.save(news);
     }
