@@ -36,15 +36,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void createComment(long newsId, CommentRequest commentRequest, UserDTO userDTO) {
-        User commentAuthor = this.userRepository.findByAuthId(userDTO.getUserId())
-                .orElseThrow(() -> new UserNotFoundException(String.format("Could not find user with authId: %s",userDTO.getUserId())));
+    public void createComment(long newsId, String authorId, String commentText) {
+        User commentAuthor = this.userRepository.findByAuthId(authorId)
+                .orElseThrow(() -> new UserNotFoundException(String.format("Could not find user with authId: %s",authorId)));
 
         News commentedNews = this.newsRepository.findById(newsId)
                 .orElseThrow(() -> new NewsNotFoundException(String.format("Could not find news with id: %d",newsId)));
 
         Comment comment = Comment.builder()
-                .text(commentRequest.text())
+                .text(commentText)
                 .build();
 
         commentAuthor.addComment(comment);
@@ -54,21 +54,21 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void changeComment(long newsId, CommentRequest commentRequest, UserDTO userDTO) {
-        Comment comment = this.commentRepository.findByNews_IdAndAuthor_AuthId(newsId, userDTO.getUserId())
-                .orElseThrow(() -> new CommentNotFoundException(String.format("Could not find comment with newsId: %d and authorId: %s",newsId,userDTO.getUserId())));
+    public void changeComment(long newsId, String authorId, String commentText) {
+        Comment comment = this.commentRepository.findByNews_IdAndAuthor_AuthId(newsId, authorId)
+                .orElseThrow(() -> new CommentNotFoundException(String.format("Could not find comment with newsId: %d and authorId: %s",newsId, authorId)));
 
-        if(comment.getText().equals(commentRequest.text())) return;
+        if(comment.getText().equals(commentText)) return;
 
-        comment.setText(commentRequest.text());
+        comment.setText(commentText);
 
         this.commentRepository.save(comment);
     }
 
     @Override
-    public void deleteComment(long newsId, UserDTO userDTO) {
-        Comment comment = this.commentRepository.findByNews_IdAndAuthor_AuthId(newsId, userDTO.getUserId())
-                .orElseThrow(() -> new CommentNotFoundException(String.format("Could not find comment with newsId: %d and authorId: %s",newsId,userDTO.getUserId())));
+    public void deleteComment(long newsId, String authorId) {
+        Comment comment = this.commentRepository.findByNews_IdAndAuthor_AuthId(newsId, authorId)
+                .orElseThrow(() -> new CommentNotFoundException(String.format("Could not find comment with newsId: %d and authorId: %s",newsId,authorId)));
 
         comment.getNews().removeComment(comment);
         comment.getAuthor().removeComment(comment);

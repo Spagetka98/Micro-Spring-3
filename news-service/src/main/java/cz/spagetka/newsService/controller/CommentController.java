@@ -7,9 +7,12 @@ import cz.spagetka.newsService.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/news")
@@ -32,7 +35,7 @@ public class CommentController {
             @Valid @RequestBody CommentRequest commentRequest,
             @AuthenticationPrincipal UserDTO userDTO
     ){
-        this.commentService.createComment(newsId,commentRequest,userDTO);
+        this.commentService.createComment(newsId,userDTO.getUserId(),commentRequest.text());
     }
 
     @PutMapping ("/{id}/comment")
@@ -41,7 +44,7 @@ public class CommentController {
             @Valid @RequestBody CommentRequest commentRequest,
             @AuthenticationPrincipal UserDTO userDTO
     ){
-        this.commentService.changeComment(newsId,commentRequest,userDTO);
+        this.commentService.changeComment(newsId,userDTO.getUserId(),commentRequest.text());
     }
 
     @DeleteMapping ("/{id}/comment")
@@ -49,6 +52,6 @@ public class CommentController {
             @PathVariable(name = "id") long newsId,
             @AuthenticationPrincipal UserDTO userDTO
     ){
-        this.commentService.deleteComment(newsId,userDTO);
+        this.commentService.deleteComment(newsId,userDTO.getUserId());
     }
 }
