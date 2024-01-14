@@ -1,4 +1,4 @@
-package cz.spagetka.newsService.model.dto;
+package cz.spagetka.newsService.model.dto.rest;
 
 public record NewsDTO(
         long newsId,

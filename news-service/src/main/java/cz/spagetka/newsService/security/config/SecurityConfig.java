@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
                 .addFilterBefore(new AuthFilter(), UsernamePasswordAuthenticationFilter.class)
+                .securityContext((securityContext) -> securityContext.requireExplicitSave(false)) // Temporarily for grapqhl
                 .build();
     }
 }

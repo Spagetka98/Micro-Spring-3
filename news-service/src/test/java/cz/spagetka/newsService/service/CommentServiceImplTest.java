@@ -3,7 +3,7 @@ package cz.spagetka.newsService.service;
 import cz.spagetka.newsService.exception.CommentNotFoundException;
 import cz.spagetka.newsService.exception.NewsNotFoundException;
 import cz.spagetka.newsService.exception.UserNotFoundException;
-import cz.spagetka.newsService.mapper.CommentMapper;
+import cz.spagetka.newsService.mapper.CommentDTOMapper;
 import cz.spagetka.newsService.model.db.Comment;
 import cz.spagetka.newsService.model.db.News;
 import cz.spagetka.newsService.model.db.User;
@@ -35,7 +35,7 @@ class CommentServiceImplTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private CommentMapper commentMapper;
+    private CommentDTOMapper commentDTOMapper;
     @InjectMocks
     private CommentServiceImpl commentService;
 

@@ -1,6 +1,7 @@
-package cz.spagetka.newsService.model.dto;
+package cz.spagetka.newsService.model.dto.rest;
 
 import cz.spagetka.newsService.model.enums.ERole;
+import cz.spagetka.newsService.model.interfaces.UserInfo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import java.util.Collections;
 
 @Getter
 @RequiredArgsConstructor
-public class UserDTO implements UserDetails {
+public class UserDTO implements UserInfo {
     @NotBlank
     private final String userId;
     @NotBlank
@@ -55,7 +56,7 @@ public class UserDTO implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(this.role.name()));
+        return Collections.singleton(new SimpleGrantedAuthority(this.getRole().name()));
     }
 
     @Override

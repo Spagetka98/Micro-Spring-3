@@ -2,14 +2,14 @@ package cz.spagetka.newsService.mapper;
 
 import cz.spagetka.newsService.model.db.News;
 import cz.spagetka.newsService.model.db.User;
-import cz.spagetka.newsService.model.dto.NewsDTO;
+import cz.spagetka.newsService.model.dto.rest.NewsDTO;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
-public interface NewsMapper {
+public interface NewsDTOMapper {
     @Mapping(target = "newsId", source = "id")
     @Mapping(target = "userId", source = "creator.authId")
     @Mapping(target = "creationDate", source = "createdAt")

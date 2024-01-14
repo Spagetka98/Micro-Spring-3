@@ -1,0 +1,40 @@
+scalar Long
+
+type Query {
+    getNews(newsId: Long!): NewsQL
+    getAllNews(page: Int!,size: Int!,authorOrTitle: String): [NewsQL]
+    getComments(newsId: Long!,page: Int!,size: Int!): [CommentQL]
+}
+
+type Mutation {
+    createComment(newsId: Long!,commentRequest: CommentRequest!): CommentQL
+    changeComment(newsId: Long!,commentRequest: CommentRequest!): CommentQL
+    deleteComment(newsId: Long!): String
+}
+
+input CommentRequest {
+    text: String!
+}
+
+type NewsQL {
+    newsId: ID!
+    title: String
+    text: String
+    creationDate: String
+    updateDate: String
+    totalLikes: Long
+    totalDislikes: Long
+    totalComments: Long
+    isLikedByUser: Boolean
+    isDislikedByUser: Boolean
+    userId: String
+    comments: [CommentQL]
+}
+
+type CommentQL {
+    id: ID!
+    text: String
+    authId: String
+    createdAt: String
+    updatedAt: String
+}

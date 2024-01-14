@@ -1,13 +1,14 @@
-package cz.spagetka.newsService.controller;
+package cz.spagetka.newsService.controller.rest;
 
-import cz.spagetka.newsService.model.dto.NewsDTO;
-import cz.spagetka.newsService.model.dto.UserDTO;
+import cz.spagetka.newsService.mapper.NewsDTOMapper;
+import cz.spagetka.newsService.model.dto.rest.NewsDTO;
+import cz.spagetka.newsService.model.dto.rest.UserDTO;
 import cz.spagetka.newsService.model.request.NewsRequest;
 import cz.spagetka.newsService.service.NewsService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,27 +21,27 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class NewsController {
     private final NewsService newsService;
+    private final NewsDTOMapper newsDTOMapper;
 
     @GetMapping("/{id}")
     public NewsDTO getNews(
             @PathVariable(name = "id") long newsId,
             @AuthenticationPrincipal UserDTO userDTO){
-
-        return this.newsService.findNews(newsId,userDTO);
+        return this.newsService.findNewsById(newsId,userDTO, newsDTOMapper::toDTO);
     }
 
     @GetMapping
     public Page<NewsDTO> getAllNews(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
-            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String titleOrAuthorName,
             @AuthenticationPrincipal UserDTO userDTO){
-        return this.newsService.findNews(page,size,search,userDTO);
+        return this.newsService.findAllNews(PageRequest.of(page,size),titleOrAuthorName,userDTO, newsDTOMapper::toDTO);
     }
 
     @GetMapping(value = "/img/{id}.jpg",produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getThumbnail(@PathVariable long id) {
-        return this.newsService.findNews(id).getThumbnail();
+        return this.newsService.findNewsById(id).getThumbnail();
     }
 
     @PostMapping

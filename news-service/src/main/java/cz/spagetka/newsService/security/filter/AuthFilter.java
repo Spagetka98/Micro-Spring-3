@@ -2,7 +2,7 @@ package cz.spagetka.newsService.security.filter;
 
 import cz.spagetka.newsService.exception.IllegalRequestInputException;
 import cz.spagetka.newsService.exception.IllegalUserRoleException;
-import cz.spagetka.newsService.model.dto.UserDTO;
+import cz.spagetka.newsService.model.dto.rest.UserDTO;
 import cz.spagetka.newsService.model.enums.EHeaders;
 import cz.spagetka.newsService.model.enums.ERole;
 import jakarta.servlet.FilterChain;
