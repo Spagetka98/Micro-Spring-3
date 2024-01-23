@@ -13,14 +13,14 @@ public abstract class BasicEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BASIC_SEQ_GENERATOR")
     @Column(name = "id", updatable = false)
-    private long id;
+    private Long id;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", insertable = false)
     private Instant updatedAt;
 
     @Version
