@@ -11,6 +11,5 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment,Long> {
     Page<Comment> findAllByNews_IdOrderByCreatedAtDesc(long newsId, Pageable pageable);
-
     Optional<Comment> findByNews_IdAndAuthor_AuthId(long newsId,String authId);
 }

@@ -126,7 +126,7 @@ public class NewsServiceImpl implements NewsService {
         this.userInteraction(id,userInfo, News::removeDislikedUser);
     }
 
-    private void userInteraction(long id, @NotNull UserInfo userInfo, @NotNull BiConsumer<News,User> action){
+    private void userInteraction(long id, UserInfo userInfo, BiConsumer<News,User> action){
         News news = this.newsRepository.findById(id)
                 .orElseThrow(() -> new NewsNotFoundException(String.format("Could not find a News with id: %d",id)));
 

@@ -13,13 +13,13 @@ eureka:
 spring:
   data:
     mongodb:
-      name: USER_DB
-      uri: mongodb+srv://AdminDB:W39ZpY0PCDil2RJw@cluster0.u5rct18.mongodb.net/USER_DB?retryWrites=true&w=majority
+      name:
+      uri:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: projecttestemail98@gmail.com
-    password: jdssdqotnhfzzeew
+    username:
+    password: 
     properties:
       mail:
         mime:
